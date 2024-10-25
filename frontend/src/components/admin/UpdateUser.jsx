@@ -40,11 +40,19 @@ function UpdateUser() {
     }
   };
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setUserData((prevUserData) => ({
+  //     ...prevUserData,
+  //     [name]: value,
+  //   }));
+  // };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setUserData((prevUserData) => ({
       ...prevUserData,
-      [name]: value,
+      [name]: name === "role" ? value.toUpperCase() : value, // Convert only 'role' to uppercase
     }));
   };
 
@@ -125,7 +133,7 @@ function UpdateUser() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Role:</label>
           <input
             type="text"
@@ -133,6 +141,18 @@ function UpdateUser() {
             value={userData.role}
             onChange={handleInputChange}
           />
+        </div> */}
+        <div className="form-group">
+          <label>Role:</label>
+          <select
+            name="role"
+            value={userData.role}
+            onChange={handleInputChange}
+            className="form-control"
+          >
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
         </div>
         <button type="submit">Update</button>
       </form>

@@ -111,6 +111,13 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getUserBookings(userId, date));
     }
 
+    @GetMapping("/today/{userId}")
+    public ResponseEntity<ReqRes> getTodayBookings(
+            @PathVariable Integer userId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(bookingService.getTodayBookings(userId, date));
+    }
+
     @GetMapping("/all/{userId}")
     public ResponseEntity<ReqRes> getAllBookings(@PathVariable Integer userId) {
         return ResponseEntity.ok(bookingService.getAllBookings(userId));

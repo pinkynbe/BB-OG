@@ -19,7 +19,7 @@ function Navbar() {
   };
 
   return (
-    <nav>
+    <nav className="bg-secondary bg-gradient">
       <ul>
         {!isAuthenticated && (
           <li>
@@ -34,6 +34,11 @@ function Navbar() {
         {isAuthenticated && (
           <li>
             <Link to="/dashboard">Dashboard</Link>
+          </li>
+        )}
+        {isAuthenticated && (
+          <li>
+            <Link to="/history">Booking History</Link>
           </li>
         )}
         {isAdmin && (

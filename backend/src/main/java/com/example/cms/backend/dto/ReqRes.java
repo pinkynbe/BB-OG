@@ -74,5 +74,8 @@ public class ReqRes {
     private String date;
     private Integer mealCount;
     private Booking booking;
+    private Integer count;
+    private Integer todayCancellations;
+    private Integer todayBookings;
     private List<Booking> bookingList;
 }

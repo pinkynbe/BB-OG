@@ -234,7 +234,6 @@ public class BookingService {
 
             Booking booking = new Booking();
             booking.setUser(user);
-//            booking.setMenuId(bookingRequest.getMenuId());
             booking.setDate(bookingDate);
             booking.setMealCount(bookingRequest.getMealCount());
 
@@ -260,6 +259,18 @@ public class BookingService {
 
             if (!booking.getUser().getId().equals(userId) && !user.getRole().equals("ADMIN")) {
                 throw new RuntimeException("Unauthorized to cancel this booking");
+            }
+
+            LocalDate today = LocalDate.now();
+            if (booking.getDate().isBefore(today)) {
+                throw new IllegalStateException("Cannot cancel past bookings");
+            }
+
+            if (booking.getDate().isEqual(today)) {
+                LocalDate cancellationDeadline = LocalDate.now().atStartOfDay().plusHours(10).toLocalDate();
+                if (LocalDate.now().isAfter(cancellationDeadline)) {
+                    throw new IllegalStateException("Meal cancellation is only allowed until 11:00 AM for today's bookings");
+                }
             }
 
             booking.setCancelled(true);
@@ -326,12 +337,40 @@ public class BookingService {
 
             List<Booking> bookings;
             if (date != null) {
-                bookings = bookingRepo.findByUser_IdAndDate(userId, date);
+                bookings = bookingRepo.findByUser_IdAndDateOrderByDateDesc(userId, date);
             } else {
-                bookings = bookingRepo.findByUser_Id(userId);
+                bookings = bookingRepo.findByUser_IdOrderByDateDesc(userId);
             }
             response.setBookingList(bookings);
             response.setMessage("Bookings retrieved successfully");
+            response.setStatusCode(200);
+        } catch (Exception e) {
+            response.setStatusCode(400);
+            response.setError(e.getMessage());
+        }
+        return response;
+    }
+
+    public ReqRes getTodayBookings(Integer userId, LocalDate date) {
+        ReqRes response = new ReqRes();
+        try {
+            User user = userRepo.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (!user.getRole().equals("ADMIN")) {
+                throw new RuntimeException("Unauthorized to view all bookings");
+            }
+
+            List<Booking> bookings = bookingRepo.findByDateOrderByDateDesc(date);
+
+            int totalCancelledBookings = (int) bookings.stream().filter(Booking::isCancelled).count();
+            int totalConfirmedBookings = bookings.size() - totalCancelledBookings;
+
+            response.setCount(bookings.size());
+            response.setTodayCancellations(totalCancelledBookings);
+            response.setTodayBookings(totalConfirmedBookings);
+            response.setBookingList(bookings);
+            response.setMessage("Today's bookings retrieved successfully");
             response.setStatusCode(200);
         } catch (Exception e) {
             response.setStatusCode(400);

@@ -13,16 +13,20 @@ function RegistrationPage() {
     department: "",
     mobileNo: "",
     pan: "",
-    role: "",
+    role: "USER",
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: name === "role" ? value.toUpperCase() : value, // Convert only 'role' to uppercase
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitted Role: ", formData.role);
     try {
       // Call the register method from UserService
 
@@ -126,7 +130,7 @@ function RegistrationPage() {
             required
           />
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Role:</label>
           <input
             type="text"
@@ -136,6 +140,18 @@ function RegistrationPage() {
             placeholder="Enter Role (ADMIN/USER)"
             required
           />
+        </div> */}
+        <div className="form-group">
+          <label>Role:</label>
+          <select
+            name="role"
+            value={formData.role}
+            onChange={handleInputChange}
+            className="form-control"
+          >
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
         </div>
         <button type="submit">Register</button>
       </form>
