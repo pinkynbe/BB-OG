@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function AdminSearch() {
+export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -62,5 +62,3 @@ function AdminSearch() {
     </div>
   );
 }
-
-export default AdminSearch;

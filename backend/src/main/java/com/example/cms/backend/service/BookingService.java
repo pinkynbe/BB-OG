@@ -236,6 +236,9 @@ public class BookingService {
             booking.setUser(user);
             booking.setDate(bookingDate);
             booking.setMealCount(bookingRequest.getMealCount());
+            booking.setEvent(bookingRequest.getEvent());
+            booking.setRefNo(bookingRequest.getRefNo());
+            booking.setRemark(bookingRequest.getRemark());
 
             Booking savedBooking = bookingRepo.save(booking);
             response.setBooking(savedBooking);
@@ -366,7 +369,7 @@ public class BookingService {
             int totalCancelledBookings = (int) bookings.stream().filter(Booking::isCancelled).count();
             int totalConfirmedBookings = bookings.size() - totalCancelledBookings;
 
-            response.setCount(bookings.size());
+//            response.setCount(bookings.size());
             response.setTodayCancellations(totalCancelledBookings);
             response.setTodayBookings(totalConfirmedBookings);
             response.setBookingList(bookings);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import UserService from "../service/UserService";
 import { useNavigate } from "react-router-dom";
 
-function RegistrationPage() {
+export default function RegistrationPage() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -16,12 +16,16 @@ function RegistrationPage() {
     role: "USER",
   });
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData({
+  //     ...formData,
+  //     // [name]: name === "role" ? value.toUpperCase() : value, // Convert only 'role' to uppercase
+  //   });
+  // };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: name === "role" ? value.toUpperCase() : value, // Convert only 'role' to uppercase
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -97,7 +101,7 @@ function RegistrationPage() {
             required
           />
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Department:</label>
           <input
             type="text"
@@ -107,6 +111,23 @@ function RegistrationPage() {
             placeholder="Enter Department"
             required
           />
+        </div> */}
+        <div className="form-group">
+          <label>Department:</label>
+          <select
+            name="department"
+            value={formData.department}
+            onChange={handleInputChange}
+            className="form-control"
+          >
+            <option value="">Select Department</option>
+            <option value="IT Section">USER</option>
+            <option value="Admin">Admin</option>
+            <option value="Establishment">Establishment</option>
+            <option value="Thesis">Thesis</option>
+            <option value="DOEC">DOEC</option>
+            <option value="Confidential">Confidential</option>
+          </select>
         </div>
         <div className="form-group">
           <label>Mobile No:</label>
@@ -130,17 +151,6 @@ function RegistrationPage() {
             required
           />
         </div>
-        {/* <div className="form-group">
-          <label>Role:</label>
-          <input
-            type="text"
-            name="role"
-            value={formData.role}
-            onChange={handleInputChange}
-            placeholder="Enter Role (ADMIN/USER)"
-            required
-          />
-        </div> */}
         <div className="form-group">
           <label>Role:</label>
           <select
@@ -158,5 +168,3 @@ function RegistrationPage() {
     </div>
   );
 }
-
-export default RegistrationPage;

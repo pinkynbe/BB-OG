@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 
-function UpdateUser() {
+export default function UpdateUser() {
   const navigate = useNavigate();
   const { userId } = useParams();
 
@@ -159,5 +159,3 @@ function UpdateUser() {
     </div>
   );
 }
-
-export default UpdateUser;

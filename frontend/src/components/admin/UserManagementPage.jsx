@@ -1,9 +1,8 @@
-// components/UserManagementPage.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import UserService from "../service/UserService";
 
-function UserManagementPage() {
+export default function UserManagementPage() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -80,5 +79,3 @@ function UserManagementPage() {
     </div>
   );
 }
-
-export default UserManagementPage;

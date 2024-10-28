@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from "react";
+import UserService from "../service/UserService";
 
-function AdminEmergencyBooking() {
+export default function TatkalBooking() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [mealCount, setMealCount] = useState(1);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      const response = await UserService.getAllUsers(token);
+      //   console.log(response);
+      setUsers(response.userList); // Assuming the list of users is under the key 'userList'
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
 
   useEffect(() => {
     // Fetch users from API
@@ -77,5 +93,3 @@ function AdminEmergencyBooking() {
     </div>
   );
 }
-
-export default AdminEmergencyBooking;

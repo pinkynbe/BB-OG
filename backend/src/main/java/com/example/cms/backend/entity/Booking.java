@@ -94,6 +94,12 @@ public class Booking {
     @Column(nullable = false)
     private Integer mealCount;
 
+    private String event;
+
+    private String refNo;
+
+    private String remark;
+
     @Column(nullable = false)
     private boolean isCancelled = false;
 }

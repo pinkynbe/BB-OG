@@ -56,7 +56,7 @@ public class ReqRes {
     private String refreshToken;
     private String expirationTime;
 
-    //User-related fields
+    //User related fields
     private String email;
     private String password;
     private String name;
@@ -69,13 +69,17 @@ public class ReqRes {
     private User user;
     private List<User> userList;
 
-    // Booking-related fields
+    // Booking related fields
     private Integer userId;
     private String date;
     private Integer mealCount;
+    private String Event;
+    private String refNo;
+    private String remark;
     private Booking booking;
-    private Integer count;
+//    private Integer count;
     private Integer todayCancellations;
     private Integer todayBookings;
     private List<Booking> bookingList;
+
 }

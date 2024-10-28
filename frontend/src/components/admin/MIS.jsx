@@ -1,8 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import MealBookingService from "../service/MealBookingService";
+import UserService from "../service/UserService";
 
-function AdminMIS() {
+export default function MIS() {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [misResults, setMisResults] = useState([]);
+  const [bookingHistory, setBookingHistory] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        if (UserService.isAuthenticated()) {
+          const token = localStorage.getItem("token");
+          const userProfile = await UserService.getYourProfile(token);
+          fetchBookingHistory(userProfile.user.id);
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUsers();
+    fetchUserInfo();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      const response = await UserService.getAllUsers(token);
+      //   console.log(response);
+      setUsers(response.userList); // Assuming the list of users is under the key 'userList'
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  const fetchBookingHistory = async (userId) => {
+    try {
+      let response;
+      if (UserService.isAdmin()) {
+        response = await MealBookingService.getAllBookings(userId);
+      } else {
+        response = await MealBookingService.getUserBookingsForDate(userId, "");
+      }
+      setBookingHistory(response.bookingList || []);
+    } catch (error) {
+      console.error("Error fetching booking history:", error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,5 +106,3 @@ function AdminMIS() {
     </div>
   );
 }
-
-export default AdminMIS;

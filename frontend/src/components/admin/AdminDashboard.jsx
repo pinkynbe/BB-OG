@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import MealBookingService from "../service/MealBookingService";
 import UserService from "../service/UserService";
 
-function AdminDashboard() {
+export default function AdminDashboard() {
   const [todayBookings, setTodayBookings] = useState(0);
   const [todayCancellations, setTodayCancellations] = useState(0);
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -86,11 +86,21 @@ function AdminDashboard() {
   //added for sorting
   const sortBookings = (bookings, order) => {
     return bookings.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return order === "asc" ? dateA - dateB : dateB - dateA;
+      const nameA = a.user.name.toLowerCase();
+      const nameB = b.user.name.toLowerCase();
+      if (nameA < nameB) return order === "asc" ? -1 : 1;
+      if (nameA > nameB) return order === "asc" ? 1 : -1;
+      return 0;
     });
   };
+
+  // const sortBookings = (bookings, order) => {
+  //   return bookings.sort((a, b) => {
+  //     const dateA = new Date(a.date);
+  //     const dateB = new Date(b.date);
+  //     return order === "asc" ? dateA - dateB : dateB - dateA;
+  //   });
+  // };
 
   return (
     <div className="container mt-5">
@@ -155,12 +165,18 @@ function AdminDashboard() {
                     <thead className="table-dark">
                       <tr>
                         <th>Booking ID</th>
-                        <th>Name</th>
                         <th className="cursor-pointer" onClick={handleSort}>
-                          Date
+                          Name{" "}
                           <span className="ml-2">
                             {sortOrder === "asc" ? "↑" : "↓"}
                           </span>
+                        </th>
+                        {/* <th className="cursor-pointer" onClick={handleSort}> */}
+                        <th>
+                          Date
+                          {/* <span className="ml-2">
+                            {sortOrder === "asc" ? "↑" : "↓"}
+                          </span> */}
                         </th>
                         <th>Number of Meals</th>
                         <th>Status</th>
@@ -200,5 +216,3 @@ function AdminDashboard() {
     </div>
   );
 }
-
-export default AdminDashboard;

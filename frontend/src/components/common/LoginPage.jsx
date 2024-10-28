@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 import { useAuth } from "../../AuthContext";
 
-function LoginPage() {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -81,5 +81,3 @@ function LoginPage() {
     </div>
   );
 }
-
-export default LoginPage;

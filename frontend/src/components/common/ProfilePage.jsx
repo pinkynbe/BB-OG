@@ -3,7 +3,7 @@ import UserService from "../service/UserService";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 
-function ProfilePage() {
+export default function ProfilePage() {
   const [profileInfo, setProfileInfo] = useState({});
   const { isAdmin } = useAuth();
 
@@ -38,5 +38,3 @@ function ProfilePage() {
     </div>
   );
 }
-
-export default ProfilePage;

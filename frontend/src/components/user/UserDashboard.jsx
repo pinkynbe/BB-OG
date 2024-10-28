@@ -206,7 +206,7 @@ export default function UserDashboard() {
               <form onSubmit={handleBookMeal}>
                 <div className="mb-3">
                   <label htmlFor="date" className="form-label">
-                    Date
+                    Booking Date
                   </label>
                   <input
                     type="date"
