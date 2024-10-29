@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import UserService from "../service/UserService";
+import MealBookingService from "../service/MealBookingService";
 
 export default function TatkalBooking() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [mealCount, setMealCount] = useState(1);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchUsers();
@@ -12,31 +14,34 @@ export default function TatkalBooking() {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      const token = localStorage.getItem("token");
       const response = await UserService.getAllUsers(token);
-      //   console.log(response);
-      setUsers(response.userList); // Assuming the list of users is under the key 'userList'
+      setUsers(response.userList);
     } catch (error) {
       console.error("Error fetching users:", error);
+      setMessage("Error fetching users. Please try again.");
     }
   };
 
-  useEffect(() => {
-    // Fetch users from API
-    // This is a placeholder, replace with actual API call
-    const fetchUsers = async () => {
-      const response = await fetch("/api/admin/users");
-      const data = await response.json();
-      setUsers(data);
-    };
-
-    fetchUsers();
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement emergency booking logic here
-    console.log("Emergency booking submitted", { selectedUser, mealCount });
+    if (!selectedUser) {
+      setMessage("Please select a user.");
+      return;
+    }
+    try {
+      const bookingData = {
+        date: new Date().toISOString().split("T")[0],
+        mealCount: mealCount,
+      };
+      await MealBookingService.bookMeal(selectedUser, bookingData);
+      setMessage("Emergency meal booked successfully!");
+      setSelectedUser("");
+      setMealCount(1);
+    } catch (error) {
+      console.error("Error booking emergency meal:", error);
+      setMessage("Error booking emergency meal. Please try again.");
+    }
   };
 
   return (
@@ -48,14 +53,15 @@ export default function TatkalBooking() {
               <h2 className="text-center">Emergency Booking</h2>
             </div>
             <div className="card-body">
+              {message && <div className="alert alert-info">{message}</div>}
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="user" className="form-label">
-                    User
+                  <label htmlFor="userSelect" className="form-label">
+                    Select User
                   </label>
                   <select
+                    id="userSelect"
                     className="form-select"
-                    id="user"
                     value={selectedUser}
                     onChange={(e) => setSelectedUser(e.target.value)}
                     required
@@ -63,7 +69,7 @@ export default function TatkalBooking() {
                     <option value="">Select a user</option>
                     {users.map((user) => (
                       <option key={user.id} value={user.id}>
-                        {user.name}
+                        {user.name} - {user.pan}
                       </option>
                     ))}
                   </select>

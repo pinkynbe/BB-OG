@@ -3,7 +3,16 @@ import MealBookingService from "../service/MealBookingService";
 import UserService from "../service/UserService";
 
 export default function UserBookingHistory() {
+  const getCurrentMonthYear = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
   const [bookingHistory, setBookingHistory] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthYear());
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -35,9 +44,39 @@ export default function UserBookingHistory() {
     }
   };
 
+  const filterBookingsByMonth = (bookings, monthYear) => {
+    const [year, month] = monthYear.split("-");
+    return bookings.filter((booking) => {
+      const bookingDate = new Date(booking.date);
+      return (
+        bookingDate.getFullYear() === parseInt(year) &&
+        bookingDate.getMonth() === parseInt(month) - 1
+      );
+    });
+  };
+
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  const filteredBookings = filterBookingsByMonth(bookingHistory, selectedMonth);
+
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Booking History</h2>
+      <div className="mb-4">
+        <label htmlFor="month-select" className="mr-2">
+          Select Month:
+        </label>
+        <input
+          type="month"
+          id="month-select"
+          value={selectedMonth}
+          onChange={handleMonthChange}
+          className="form-control"
+          style={{ width: "auto", display: "inline-block" }}
+        />
+      </div>
       <div className="table-responsive">
         <table className="table table-striped table-hover">
           <thead className="table-dark">
@@ -49,7 +88,7 @@ export default function UserBookingHistory() {
             </tr>
           </thead>
           <tbody>
-            {bookingHistory.map((booking) => (
+            {filteredBookings.map((booking) => (
               <tr key={booking.bookId}>
                 <td>{booking.bookId}</td>
                 <td>{booking.date}</td>

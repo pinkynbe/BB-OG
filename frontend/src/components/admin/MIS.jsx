@@ -3,60 +3,207 @@ import MealBookingService from "../service/MealBookingService";
 import UserService from "../service/UserService";
 
 export default function MIS() {
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [misResults, setMisResults] = useState([]);
-  const [bookingHistory, setBookingHistory] = useState([]);
+  const getCurrentMonthYear = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthYear());
+  const [selectedUser, setSelectedUser] = useState("");
   const [users, setUsers] = useState([]);
+  const [adminId, setAdminId] = useState("");
+  const [bookings, setBookings] = useState([]);
+  const [summary, setSummary] = useState({
+    total: 0,
+    cancelled: 0,
+    confirmed: 0,
+  });
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        if (UserService.isAuthenticated()) {
-          const token = localStorage.getItem("token");
-          const userProfile = await UserService.getYourProfile(token);
-          fetchBookingHistory(userProfile.user.id);
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-
     fetchUsers();
-    fetchUserInfo();
   }, []);
+
+  useEffect(() => {
+    if (adminId) {
+      fetchBookings();
+    }
+  }, [selectedMonth, selectedUser, adminId]);
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-      const response = await UserService.getAllUsers(token);
-      //   console.log(response);
-      setUsers(response.userList); // Assuming the list of users is under the key 'userList'
+      const token = localStorage.getItem("token");
+      const profileResponse = await UserService.getYourProfile(token);
+      setAdminId(profileResponse.user.id);
+      const usersResponse = await UserService.getAllUsers(token);
+      setUsers(usersResponse.userList);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
 
-  const fetchBookingHistory = async (userId) => {
+  const fetchBookings = async () => {
     try {
+      // const token = localStorage.getItem("token");
       let response;
-      if (UserService.isAdmin()) {
-        response = await MealBookingService.getAllBookings(userId);
+      if (selectedUser) {
+        response = await MealBookingService.getUserBookingsForDate(
+          selectedUser,
+          ""
+        );
       } else {
-        response = await MealBookingService.getUserBookingsForDate(userId, "");
+        response = await MealBookingService.getAllBookings(adminId);
       }
-      setBookingHistory(response.bookingList || []);
+      const filteredBookings = filterBookingsByMonth(
+        response.bookingList || [],
+        selectedMonth
+      );
+      setBookings(filteredBookings);
+      updateSummary(filteredBookings);
     } catch (error) {
-      console.error("Error fetching booking history:", error);
+      console.error("Error fetching bookings:", error);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Implement MIS report generation logic here
-    // This is a placeholder, replace with actual API call
-    const response = await fetch(`/api/admin/mis?month=${selectedMonth}`);
-    const data = await response.json();
-    setMisResults(data);
+  const filterBookingsByMonth = (bookings, monthYear) => {
+    const [year, month] = monthYear.split("-");
+    return bookings.filter((booking) => {
+      const bookingDate = new Date(booking.date);
+      return (
+        bookingDate.getFullYear() === parseInt(year) &&
+        bookingDate.getMonth() === parseInt(month) - 1
+      );
+    });
+  };
+
+  const updateSummary = (filteredBookings) => {
+    const total = filteredBookings.length;
+    const cancelled = filteredBookings.filter(
+      (booking) => booking.cancelled
+    ).length;
+    const confirmed = total - cancelled;
+    setSummary({ total, cancelled, confirmed });
+  };
+
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  const handleUserChange = (event) => {
+    setSelectedUser(event.target.value);
+  };
+
+  const handleUserClick = async (userId) => {
+    setSelectedUser(userId);
+    try {
+      // const token = localStorage.getItem("token");
+      const response = await MealBookingService.getUserBookingsForDate(
+        userId,
+        ""
+      );
+      const filteredBookings = filterBookingsByMonth(
+        response.bookingList || [],
+        selectedMonth
+      );
+      setBookings(filteredBookings);
+      updateSummary(filteredBookings);
+    } catch (error) {
+      console.error("Error fetching user bookings:", error);
+    }
+  };
+
+  const groupBookingsByUser = (bookings) => {
+    return bookings.reduce((acc, booking) => {
+      const userId = booking.user.id;
+      if (!acc[userId]) {
+        acc[userId] = {
+          id: userId,
+          name: booking.user.name,
+          pan: booking.user.pan,
+          total: 0,
+          cancelled: 0,
+          confirmed: 0,
+        };
+      }
+      acc[userId].total++;
+      if (booking.cancelled) {
+        acc[userId].cancelled++;
+      } else {
+        acc[userId].confirmed++;
+      }
+      return acc;
+    }, {});
+  };
+
+  const renderTable = () => {
+    if (selectedUser) {
+      return (
+        <>
+          <h3 className="mb-3">
+            Bookings for{" "}
+            {users.find((u) => u.id === selectedUser)?.name || "Selected User"}
+          </h3>
+          <table className="table table-striped table-hover">
+            <thead className="table-dark">
+              <tr>
+                <th>Booking ID</th>
+                <th>Date</th>
+                <th>Number of Meals</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookings.map((booking) => (
+                <tr key={booking.bookId}>
+                  <td>{booking.bookId}</td>
+                  <td>{booking.date}</td>
+                  <td>{booking.mealCount}</td>
+                  <td>{booking.cancelled ? "Cancelled" : "Booked"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      );
+    } else {
+      const groupedBookings = groupBookingsByUser(bookings);
+      return (
+        <table className="table table-striped table-hover">
+          <thead className="table-dark">
+            <tr>
+              <th>User Name</th>
+              <th>PAN</th>
+              <th>Total Bookings</th>
+              <th>Cancelled Bookings</th>
+              <th>Confirmed Bookings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* {Object.entries(groupedBookings).map(([userId, data]) => (
+              <tr key={userId}>
+                <td>{data.name}</td> */}
+            {Object.values(groupedBookings).map((data) => (
+              <tr key={data.id}>
+                <td>
+                  <button
+                    className="btn btn-link p-0"
+                    onClick={() => handleUserClick(data.id)}
+                  >
+                    {data.name}
+                  </button>
+                </td>
+                <td>{data.pan}</td>
+                <td>{data.total}</td>
+                <td>{data.cancelled}</td>
+                <td>{data.confirmed}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
+    }
   };
 
   return (
@@ -64,45 +211,68 @@ export default function MIS() {
       <h2 className="text-center mb-4">Monthly Booking Summary</h2>
       <div className="row justify-content-center mb-4">
         <div className="col-md-6">
-          <form onSubmit={handleSubmit}>
-            <div className="input-group">
+          <form>
+            <div className="mb-3">
+              <label htmlFor="month-select" className="form-label">
+                Select Month
+              </label>
               <input
                 type="month"
-                className="form-control"
-                id="monthInput"
+                id="month-select"
                 value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
+                onChange={handleMonthChange}
+                className="form-control"
                 required
               />
-              <button className="btn btn-primary" type="submit">
-                Generate Report
-              </button>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="userSelect" className="form-label">
+                Select User
+              </label>
+              <select
+                id="userSelect"
+                className="form-select"
+                value={selectedUser}
+                onChange={handleUserChange}
+              >
+                <option value="">All Users</option>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name} - {user.pan}
+                  </option>
+                ))}
+              </select>
             </div>
           </form>
         </div>
       </div>
-      <div className="table-responsive">
-        <table className="table table-striped table-hover">
-          <thead className="table-dark">
-            <tr>
-              <th>Date</th>
-              <th>Total Bookings</th>
-              <th>Total Meals</th>
-              <th>Cancellations</th>
-            </tr>
-          </thead>
-          <tbody>
-            {misResults.map((result) => (
-              <tr key={result.date}>
-                <td>{result.date}</td>
-                <td>{result.totalBookings}</td>
-                <td>{result.totalMeals}</td>
-                <td>{result.cancellations}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="row mb-4">
+        <div className="col-md-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Total Bookings</h5>
+              <p className="card-text">{summary.total}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Confirmed Bookings</h5>
+              <p className="card-text">{summary.confirmed}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Cancelled Bookings</h5>
+              <p className="card-text">{summary.cancelled}</p>
+            </div>
+          </div>
+        </div>
       </div>
+      <div className="table-responsive">{renderTable()}</div>
     </div>
   );
 }

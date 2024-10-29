@@ -9,6 +9,7 @@ export default function UserDashboard() {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [bookingHistory, setBookingHistory] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
+  const [bookingType, setBookingType] = useState("single"); // New state for booking type
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -27,7 +28,21 @@ export default function UserDashboard() {
     fetchUserInfo();
   }, []);
 
-  //Booking
+  const getNextMonday = () => {
+    const today = new Date();
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7));
+    return nextMonday.toISOString().split("T")[0];
+  };
+
+  useEffect(() => {
+    if (bookingType === "week") {
+      setDate(getNextMonday());
+    } else {
+      setDate("");
+    }
+  }, [bookingType]);
+
   const handleBookMeal = async (e) => {
     e.preventDefault();
     const now = new Date();
@@ -45,14 +60,34 @@ export default function UserDashboard() {
     }
 
     try {
-      await MealBookingService.bookMeal(currentUserId, {
-        date,
-        mealCount,
-      });
+      if (bookingType === "single") {
+        await MealBookingService.bookMeal(currentUserId, {
+          date,
+          mealCount,
+        });
+      } else {
+        // Book for the entire week
+        const weekDates = [];
+        for (let i = 0; i < 5; i++) {
+          const currentDate = new Date(bookDate);
+          currentDate.setDate(bookDate.getDate() + i);
+          weekDates.push(currentDate.toISOString().split("T")[0]);
+        }
+        for (const weekDate of weekDates) {
+          await MealBookingService.bookMeal(currentUserId, {
+            date: weekDate,
+            mealCount,
+          });
+        }
+      }
       setMessage("Booking successful!");
       setDate("");
       setMealCount(1);
-      alert("Meal booked successfully!");
+      alert(
+        bookingType === "single"
+          ? "Meal booked successfully!"
+          : "Meals booked for the entire week successfully!"
+      );
       fetchBookingHistory(currentUserId);
     } catch (error) {
       console.error("Error booking meal:", error);
@@ -205,8 +240,43 @@ export default function UserDashboard() {
               {message && <div className="alert alert-info">{message}</div>}
               <form onSubmit={handleBookMeal}>
                 <div className="mb-3">
+                  <label className="form-label">Booking Type</label>
+                  <div>
+                    <div className="form-check form-check-inline">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="bookingType"
+                        id="singleDay"
+                        value="single"
+                        checked={bookingType === "single"}
+                        onChange={(e) => setBookingType(e.target.value)}
+                      />
+                      <label className="form-check-label" htmlFor="singleDay">
+                        Single day
+                      </label>
+                    </div>
+                    <div className="form-check form-check-inline">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="bookingType"
+                        id="entireWeek"
+                        value="week"
+                        checked={bookingType === "week"}
+                        onChange={(e) => setBookingType(e.target.value)}
+                      />
+                      <label className="form-check-label" htmlFor="entireWeek">
+                        Entire week (Mon-Fri)
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="mb-3">
                   <label htmlFor="date" className="form-label">
-                    Booking Date
+                    {bookingType === "single"
+                      ? "Booking Date"
+                      : "Starting Date (Next Monday)"}
                   </label>
                   <input
                     type="date"
@@ -216,11 +286,12 @@ export default function UserDashboard() {
                     onChange={(e) => setDate(e.target.value)}
                     min={new Date().toISOString().split("T")[0]}
                     required
+                    disabled={bookingType === "week"}
                   />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="mealCount" className="form-label">
-                    Number of Meals
+                    Number of Meals {bookingType === "week" ? "(per day)" : ""}
                   </label>
                   <input
                     type="number"
@@ -234,7 +305,7 @@ export default function UserDashboard() {
                   />
                 </div>
                 <button type="submit" className="btn btn-primary w-100">
-                  Book Meal
+                  Book Meal{bookingType === "week" ? "s" : ""}
                 </button>
               </form>
             </div>
