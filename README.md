@@ -7,4 +7,5 @@ For Frontend:
 > > Clone
 > > Open terminal in VSCode
 > > npm -i
+> > then
 > > npm start
