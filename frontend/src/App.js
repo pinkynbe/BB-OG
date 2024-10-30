@@ -3,19 +3,20 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./AuthContext";
 import { useAuth } from "./AuthContext";
 import LoginPage from "./components/common/LoginPage";
-import RegistrationPage from "./components/admin/RegistrationPage";
 import Navbar from "./components/common/Navbar";
 import FooterComponent from "./components/common/Footer";
-import UpdateUser from "./components/admin/UpdateUser";
-import UserManagementPage from "./components/admin/UserManagementPage";
 import ProfilePage from "./components/common/ProfilePage";
+import UpdateUser from "./components/admin/UpdateUser";
+import RegistrationPage from "./components/admin/RegistrationPage";
+import UserManagementPage from "./components/admin/UserManagementPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
-import UserDashboard from "./components/user/UserDashboard";
-import UserBookingHistory from "./components/common/UserBookingHistory";
+import AdminBookingHistory from "./components/admin/AdminBookingHistory";
 import BulkBooking from "./components/admin/BulkBooking";
 import TatkalBooking from "./components/admin/TatkalBooking";
 import MIS from "./components/admin/MIS";
 import Search from "./components/admin/Search";
+import UserDashboard from "./components/user/UserDashboard";
+import UserBookingHistory from "./components/user/UserBookingHistory";
 
 function AppRoutes() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -70,7 +71,7 @@ function AppRoutes() {
         element={
           isAuthenticated ? (
             isAdmin ? (
-              <UserBookingHistory />
+              <AdminBookingHistory />
             ) : (
               <UserBookingHistory />
             )
