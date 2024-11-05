@@ -18,14 +18,29 @@ export default function RegistrationPage() {
 
   // const handleInputChange = (e) => {
   //   const { name, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     // [name]: name === "role" ? value.toUpperCase() : value, // Convert only 'role' to uppercase
-  //   });
+  //   setFormData({ ...formData, [name]: value });
   // };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Validation for exactly 10-digit number input
+    if (
+      name === "mobileNo" &&
+      (!/^\d{0,10}$/.test(value) || value.length > 10)
+    ) {
+      return; // Skip updating the state if input is invalid
+    }
+
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "mobileNo" && value.length !== 10) {
+      alert("Please enter exactly 10 digits for mobile number.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -121,7 +136,7 @@ export default function RegistrationPage() {
             className="form-control"
           >
             <option value="">Select Department</option>
-            <option value="IT Section">USER</option>
+            <option value="IT Section">IT Section</option>
             <option value="Admin">Admin</option>
             <option value="Establishment">Establishment</option>
             <option value="Thesis">Thesis</option>
@@ -136,6 +151,7 @@ export default function RegistrationPage() {
             name="mobileNo"
             value={formData.mobileNo}
             onChange={handleInputChange}
+            onBlur={handleBlur}
             placeholder="Enter Mobile Number"
             required
           />
@@ -145,6 +161,8 @@ export default function RegistrationPage() {
           <input
             type="text"
             name="pan"
+            min="10"
+            max="10"
             value={formData.city}
             onChange={handleInputChange}
             placeholder="Enter Pan Number"

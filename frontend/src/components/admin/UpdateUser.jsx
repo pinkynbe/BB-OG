@@ -40,20 +40,29 @@ export default function UpdateUser() {
     }
   };
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUserData((prevUserData) => ({
-  //     ...prevUserData,
-  //     [name]: value,
-  //   }));
-  // };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Validation for exactly 10-digit number input
+    if (
+      name === "mobileNo" &&
+      (!/^\d{0,10}$/.test(value) || value.length > 10)
+    ) {
+      return; // Skip updating the state if input is invalid
+    }
 
     setUserData((prevUserData) => ({
       ...prevUserData,
       [name]: name === "role" ? value.toUpperCase() : value, // Convert only 'role' to uppercase
     }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "mobileNo" && value.length !== 10) {
+      alert("Please enter exactly 10 digits for mobile number.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -118,10 +127,11 @@ export default function UpdateUser() {
         <div className="form-group">
           <label>Mobile No:</label>
           <input
-            type="number"
+            type="text"
             name="mobileNo"
             value={userData.mobileNo}
             onChange={handleInputChange}
+            onBlur={handleBlur}
           />
         </div>
         <div className="form-group">

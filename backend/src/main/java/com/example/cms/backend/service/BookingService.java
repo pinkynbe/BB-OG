@@ -221,6 +221,9 @@ public class BookingService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private EmailService emailService;
+
     public ReqRes createBooking(Integer userId, ReqRes bookingRequest) {
         ReqRes response = new ReqRes();
         try {
@@ -244,6 +247,11 @@ public class BookingService {
             response.setBooking(savedBooking);
             response.setMessage("Booking created successfully");
             response.setStatusCode(200);
+
+            // Send confirmation email
+            String subject = "Booking Confirmation";
+            String body = "Dear " + user.getName() + ",\n\nYour Meal booking has been confirmed for " + bookingDate + ".\n\nNo of Meals:" + booking.getMealCount();
+            emailService.sendBookingConfirmationEmail(user.getEmail(), subject, body);
         } catch (Exception e) {
             response.setStatusCode(400);
             response.setError(e.getMessage());
