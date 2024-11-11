@@ -55,6 +55,7 @@ public class ReqRes {
     private String token;
     private String refreshToken;
     private String expirationTime;
+    private String otp;
 
     //User related fields
     private String email;
@@ -65,6 +66,7 @@ public class ReqRes {
     private Long mobileNo;
     private String pan;
     private String role;
+    private String avatar;
 
     private User user;
     private List<User> userList;

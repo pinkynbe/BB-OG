@@ -41,6 +41,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role;
 
+    private String avatar;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Booking> bookingList;
 

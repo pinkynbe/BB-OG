@@ -5,21 +5,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-//@Service
-//public class EmailService {
-//
-//    @Autowired
-//    private JavaMailSender mailSender;
-//
-//    public void sendBookingConfirmationEmail(String toEmail, String subject, String body) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(toEmail);
-//        message.setSubject(subject);
-//        message.setText(body);
-//        mailSender.send(message);
-//    }
-//}
-
 @Service
 public class EmailService {
 
@@ -36,6 +21,19 @@ public class EmailService {
             System.out.println("Mail sent successfully!");
         } catch (Exception e) {
             System.err.println("Error sending email: " + e.getMessage());
+        }
+    }
+
+    public void sendOtpEmail(String toEmail, String otp) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(toEmail);
+            message.setSubject("Your OTP for Login");
+            message.setText("Your OTP is: " + otp + ". It will expire in 5 minutes.");
+            mailSender.send(message);
+            System.out.println("OTP email sent successfully!");
+        } catch (Exception e) {
+            System.err.println("Error sending OTP email: " + e.getMessage());
         }
     }
 }

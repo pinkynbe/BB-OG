@@ -17,6 +17,83 @@ class UserService {
     }
   }
 
+  // New requestOtp method with mobile only.
+  // static async requestOtp(mobileNumber) {
+  //   try {
+  //     const response = await axios.post(
+  //       `${UserService.BASE_URL}/auth/send-otp`,
+  //       { mobileNo: mobileNumber }
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
+  //requestOtp with mobile or email option
+  static async requestOtp(value, method) {
+    try {
+      console.log(`Requesting OTP for ${method}: ${value}`);
+      const response = await axios.post(
+        `${UserService.BASE_URL}/auth/send-otp`,
+        {
+          [method === "mobile" ? "mobileNo" : "email"]: value,
+        }
+      );
+      console.log("OTP request response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error requesting OTP:",
+        error.response ? error.response.data : error.message
+      );
+      throw error;
+    }
+  }
+
+  // New verifyOtp method with mobile only.
+  // static async verifyOtp(mobileNumber, otp) {
+  //   try {
+  //     const response = await axios.post(
+  //       `${UserService.BASE_URL}/auth/verify-otp`,
+  //       { mobileNo: mobileNumber, otp: otp }
+  //     );
+  //     if (response.data.token) {
+  //       localStorage.setItem("token", response.data.token);
+  //       localStorage.setItem("role", response.data.role);
+  //     }
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
+  // verifyOtp method with mobile and email option.
+  static async verifyOtp(value, otp, method) {
+    try {
+      console.log(`Verifying OTP for ${method}: ${value}`);
+      const response = await axios.post(
+        `${UserService.BASE_URL}/auth/verify-otp`,
+        {
+          [method === "mobile" ? "mobileNo" : "email"]: value,
+          otp: otp,
+        }
+      );
+      console.log("OTP verification response:", response.data);
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("role", response.data.role);
+      }
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error verifying OTP:",
+        error.response ? error.response.data : error.message
+      );
+      throw error;
+    }
+  }
+
   static async register(userData, token) {
     try {
       const response = await axios.post(

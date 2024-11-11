@@ -3,8 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./AuthContext";
 import { useAuth } from "./AuthContext";
 import LoginPage from "./components/common/LoginPage";
-import Navbar from "./components/common/Navbar";
-import FooterComponent from "./components/common/Footer";
 import ProfilePage from "./components/common/ProfilePage";
 import UpdateUser from "./components/admin/UpdateUser";
 import RegistrationPage from "./components/admin/RegistrationPage";
@@ -17,6 +15,8 @@ import MIS from "./components/admin/MIS";
 import Search from "./components/admin/Search";
 import UserDashboard from "./components/user/UserDashboard";
 import UserBookingHistory from "./components/user/UserBookingHistory";
+import Layout from "./components/Layout";
+import { ThemeProvider } from "./ThemeContext";
 
 function AppRoutes() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -87,15 +87,19 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <div className="App">
-          <Navbar />
-          <div className="content">
-            <AppRoutes />
+      <ThemeProvider>
+        <BrowserRouter>
+          <div className="App">
+            {/* <Navbar /> */}
+            <Layout>
+              <div className="content">
+                <AppRoutes />
+              </div>
+            </Layout>
+            {/* <FooterComponent /> */}
           </div>
-          <FooterComponent />
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
