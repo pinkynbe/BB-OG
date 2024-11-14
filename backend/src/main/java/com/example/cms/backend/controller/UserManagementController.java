@@ -21,31 +21,6 @@ public class UserManagementController {
     private UserManagementService userManagementService;
 
     @PostMapping("/auth/send-otp")
-//    //Mobile otp without logging.
-//    public ResponseEntity<ReqRes> sendOtp(@RequestBody ReqRes request) {
-//        if (request.getMobileNo() == null) {
-//            ReqRes response = new ReqRes();
-//            response.setStatusCode(400);
-//            response.setMessage("Mobile number is required");
-//            return ResponseEntity.badRequest().body(response);
-//        }
-//        return ResponseEntity.ok(userManagementService.sendOtp(request.getMobileNo().toString()));
-//    }
-
-//    //Mobile otp with logging.
-//    public ResponseEntity<ReqRes> sendOtp(@RequestBody ReqRes request) {
-//        logger.info("Received request to send OTP");
-//        if (request.getMobileNo() == null) {
-//            logger.warn("Mobile number is null in the request");
-//            ReqRes response = new ReqRes();
-//            response.setStatusCode(400);
-//            response.setMessage("Mobile number is required");
-//            return ResponseEntity.badRequest().body(response);
-//        }
-//        logger.info("Sending OTP to mobile number: {}", request.getMobileNo());
-//        return ResponseEntity.ok(userManagementService.sendOtp(request.getMobileNo().toString()));
-//    }
-
     //Mobile and Email otp.
     public ResponseEntity<ReqRes> sendOtp(@RequestBody ReqRes request) {
         String mobileNumber = request.getMobileNo() != null ? request.getMobileNo().toString() : null;
@@ -54,36 +29,21 @@ public class UserManagementController {
     }
 
     @PostMapping("/auth/verify-otp")
-//    //Mobile otp without logging.
-//    public ResponseEntity<ReqRes> verifyOtp(@RequestBody ReqRes request) {
-//        if (request.getMobileNo() == null || request.getOtp() == null) {
-//            ReqRes response = new ReqRes();
-//            response.setStatusCode(400);
-//            response.setMessage("Mobile number and OTP are required");
-//            return ResponseEntity.badRequest().body(response);
-//        }
-//        return ResponseEntity.ok(userManagementService.verifyOtp(request.getMobileNo().toString(), request.getOtp()));
-//    }
-
-//    //Mobile otp with logging.
-//    public ResponseEntity<ReqRes> verifyOtp(@RequestBody ReqRes request) {
-//        logger.info("Received request to verify OTP");
-//        if (request.getMobileNo() == null || request.getOtp() == null) {
-//            logger.warn("Mobile number or OTP is null in the request");
-//            ReqRes response = new ReqRes();
-//            response.setStatusCode(400);
-//            response.setMessage("Mobile number and OTP are required");
-//            return ResponseEntity.badRequest().body(response);
-//        }
-//        logger.info("Verifying OTP for mobile number: {}", request.getMobileNo());
-//        return ResponseEntity.ok(userManagementService.verifyOtp(request.getMobileNo().toString(), request.getOtp()));
-//    }
-
-    //Mobile an email otp logging.
+    //Mobile and email otp logging.
     public ResponseEntity<ReqRes> verifyOtp(@RequestBody ReqRes request) {
         String mobileNumber = request.getMobileNo() != null ? request.getMobileNo().toString() : null;
         String email = request.getEmail();
         return ResponseEntity.ok(userManagementService.verifyOtp(mobileNumber, email, request.getOtp()));
+    }
+
+    @PostMapping("/auth/send-booking-otp/{userId}")
+    public ResponseEntity<ReqRes> sendBookingOtp(@PathVariable Integer userId) {
+        return ResponseEntity.ok(userManagementService.sendBookingOtp(userId));
+    }
+
+    @PostMapping("/auth/verify-booking-otp")
+    public ResponseEntity<ReqRes> verifyBookingOtp(@RequestBody ReqRes request) {
+        return ResponseEntity.ok(userManagementService.verifyBookingOtp(request.getMobileNo().toString(), request.getOtp()));
     }
 
     @PostMapping("/auth/register")
@@ -141,8 +101,8 @@ public class UserManagementController {
 
     @PutMapping("/user/update-avatar/{userId}")
     public ResponseEntity<ReqRes> updateAvatar(@PathVariable Integer userId, @RequestBody ReqRes reqRes) {
-        String avatar = reqRes.getAvatar();  // Assuming `ReqRes` has an `avatar` field to pass avatar data
-        return ResponseEntity.ok(userManagementService.updateAvatar(userId, avatar));
+        String avatarStyle = reqRes.getAvatarStyle();  // Assuming ReqRes has an avatarStyle field
+        return ResponseEntity.ok(userManagementService.updateAvatar(userId, avatarStyle));
     }
 
 

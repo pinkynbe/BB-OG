@@ -319,7 +319,7 @@
 //   );
 // }
 
-// Signup with mobile or email option
+// Login with mobile or email option
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
@@ -378,14 +378,132 @@ export default function LoginPage() {
     setError("");
   };
 
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  //       <div className="max-w-md w-full space-y-8">
+  //         <div>
+  //           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+  //             Sign in to your account
+  //           </h2>
+  //         </div>
+  //         {error && (
+  //           <div
+  //             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+  //             role="alert"
+  //           >
+  //             <span className="block sm:inline">{error}</span>
+  //           </div>
+  //         )}
+  //         <form
+  //           className="mt-8 space-y-6"
+  //           onSubmit={otpSent ? handleVerifyOtp : handleRequestOtp}
+  //         >
+  //           <input type="hidden" name="remember" value="true" />
+  //           <div className="rounded-md shadow-sm -space-y-px">
+  //             {!otpSent && (
+  //               <div>
+  //                 <label htmlFor="otp-method" className="sr-only">
+  //                   OTP Method
+  //                 </label>
+  //                 <select
+  //                   id="otp-method"
+  //                   name="otp-method"
+  //                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+  //                   value={otpMethod}
+  //                   onChange={(e) => setOtpMethod(e.target.value)}
+  //                 >
+  //                   <option value="mobile">Mobile</option>
+  //                   <option value="email">Email</option>
+  //                 </select>
+  //               </div>
+  //             )}
+  //             {otpMethod === "mobile" && (
+  //               <div>
+  //                 <label htmlFor="mobile-number" className="sr-only">
+  //                   Mobile Number
+  //                 </label>
+  //                 <input
+  //                   id="mobile-number"
+  //                   name="mobile"
+  //                   type="tel"
+  //                   required
+  //                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+  //                   placeholder="Mobile Number"
+  //                   value={mobileNumber}
+  //                   onChange={(e) => setMobileNumber(e.target.value)}
+  //                   disabled={otpSent}
+  //                 />
+  //               </div>
+  //             )}
+  //             {otpMethod === "email" && (
+  //               <div>
+  //                 <label htmlFor="email" className="sr-only">
+  //                   Email
+  //                 </label>
+  //                 <input
+  //                   id="email"
+  //                   name="email"
+  //                   type="email"
+  //                   required
+  //                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+  //                   placeholder="Email"
+  //                   value={email}
+  //                   onChange={(e) => setEmail(e.target.value)}
+  //                   disabled={otpSent}
+  //                 />
+  //               </div>
+  //             )}
+  //             {otpSent && (
+  //               <div>
+  //                 <label htmlFor="otp" className="sr-only">
+  //                   OTP
+  //                 </label>
+  //                 <input
+  //                   id="otp"
+  //                   name="otp"
+  //                   type="text"
+  //                   required
+  //                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+  //                   placeholder="Enter OTP"
+  //                   value={otp}
+  //                   onChange={(e) => setOtp(e.target.value)}
+  //                 />
+  //               </div>
+  //             )}
+  //           </div>
+
+  //           <div className="flex items-center justify-between">
+  //             {otpSent && (
+  //               <button
+  //                 type="button"
+  //                 onClick={handleBack}
+  //                 className="text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150"
+  //               >
+  //                 Change {otpMethod === "mobile" ? "mobile number" : "email"}
+  //               </button>
+  //             )}
+  //           </div>
+
+  //           <div>
+  //             <button
+  //               type="submit"
+  //               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+  //             >
+  //               {otpSent ? "Verify OTP" : "Request OTP"}
+  //             </button>
+  //           </div>
+  //         </form>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-        </div>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Sign in to your account
+        </h2>
+
         {error && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -394,32 +512,43 @@ export default function LoginPage() {
             <span className="block sm:inline">{error}</span>
           </div>
         )}
+
         <form
           className="mt-8 space-y-6"
           onSubmit={otpSent ? handleVerifyOtp : handleRequestOtp}
         >
           <input type="hidden" name="remember" value="true" />
-          <div className="rounded-md shadow-sm -space-y-px">
-            {!otpSent && (
+
+          {/* OTP Method Selection */}
+          {!otpSent && (
+            <div className="space-y-2">
+              <label
+                htmlFor="otp-method"
+                className="text-sm font-medium text-gray-700"
+              >
+                Select Login Method
+              </label>
+              <select
+                id="otp-method"
+                name="otp-method"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={otpMethod}
+                onChange={(e) => setOtpMethod(e.target.value)}
+              >
+                <option value="mobile">Mobile</option>
+                <option value="email">Email</option>
+              </select>
+            </div>
+          )}
+
+          {/* Conditional Input Fields for Mobile or Email */}
+          <div className="space-y-2">
+            {otpMethod === "mobile" && !otpSent && (
               <div>
-                <label htmlFor="otp-method" className="sr-only">
-                  OTP Method
-                </label>
-                <select
-                  id="otp-method"
-                  name="otp-method"
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  value={otpMethod}
-                  onChange={(e) => setOtpMethod(e.target.value)}
+                <label
+                  htmlFor="mobile-number"
+                  className="text-sm font-medium text-gray-700"
                 >
-                  <option value="mobile">Mobile</option>
-                  <option value="email">Email</option>
-                </select>
-              </div>
-            )}
-            {otpMethod === "mobile" && (
-              <div>
-                <label htmlFor="mobile-number" className="sr-only">
                   Mobile Number
                 </label>
                 <input
@@ -427,17 +556,20 @@ export default function LoginPage() {
                   name="mobile"
                   type="tel"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Mobile Number"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Enter your mobile number"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
-                  disabled={otpSent}
                 />
               </div>
             )}
-            {otpMethod === "email" && (
+
+            {otpMethod === "email" && !otpSent && (
               <div>
-                <label htmlFor="email" className="sr-only">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email
                 </label>
                 <input
@@ -445,45 +577,51 @@ export default function LoginPage() {
                   name="email"
                   type="email"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Email"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={otpSent}
-                />
-              </div>
-            )}
-            {otpSent && (
-              <div>
-                <label htmlFor="otp" className="sr-only">
-                  OTP
-                </label>
-                <input
-                  id="otp"
-                  name="otp"
-                  type="text"
-                  required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Enter OTP"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
                 />
               </div>
             )}
           </div>
 
-          <div className="flex items-center justify-between">
-            {otpSent && (
+          {/* OTP Field */}
+          {otpSent && (
+            <div className="space-y-2">
+              <label
+                htmlFor="otp"
+                className="text-sm font-medium text-gray-700"
+              >
+                Enter OTP
+              </label>
+              <input
+                id="otp"
+                name="otp"
+                type="text"
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Enter the OTP sent to your device"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+            </div>
+          )}
+
+          {/* Change Method Button */}
+          {otpSent && (
+            <div className="flex justify-between items-center">
               <button
                 type="button"
                 onClick={handleBack}
                 className="text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150"
               >
-                Change {otpMethod === "mobile" ? "mobile number" : "email"}
+                Change {otpMethod === "mobile" ? "Mobile Number" : "Email"}
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
+          {/* Submit Button */}
           <div>
             <button
               type="submit"

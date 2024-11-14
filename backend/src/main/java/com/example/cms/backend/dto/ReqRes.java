@@ -66,7 +66,7 @@ public class ReqRes {
     private Long mobileNo;
     private String pan;
     private String role;
-    private String avatar;
+    private String avatarStyle;
 
     private User user;
     private List<User> userList;

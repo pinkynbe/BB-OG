@@ -245,7 +245,7 @@ export default function BulkBooking() {
   return (
     <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 sm:p-6">
+        <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 p-4 sm:p-6">
           <h2 className="text-2xl font-bold text-white text-center">
             Bulk Booking
           </h2>
@@ -280,7 +280,7 @@ export default function BulkBooking() {
                 <select
                   id="event"
                   name="event"
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                   value={formData.event}
                   onChange={handleInputChange}
                   required
@@ -313,7 +313,7 @@ export default function BulkBooking() {
                   type="date"
                   name="date"
                   id="date"
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                   value={formData.date}
                   onChange={handleInputChange}
                   min={new Date().toISOString().split("T")[0]}
@@ -340,7 +340,7 @@ export default function BulkBooking() {
                   type="number"
                   name="mealCount"
                   id="mealCount"
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                   min="1"
                   value={formData.mealCount}
                   onChange={handleInputChange}
@@ -367,7 +367,7 @@ export default function BulkBooking() {
                   type="text"
                   name="refNo"
                   id="refNo"
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                   value={formData.refNo}
                   onChange={handleInputChange}
                   placeholder="Enter reference number"
@@ -387,7 +387,7 @@ export default function BulkBooking() {
                   id="remark"
                   name="remark"
                   rows={3}
-                  className="shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                   value={formData.remark}
                   onChange={handleInputChange}
                   placeholder="Enter any additional remarks"
@@ -398,7 +398,7 @@ export default function BulkBooking() {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Book
               </button>

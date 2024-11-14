@@ -203,12 +203,16 @@ package com.example.cms.backend.service;
 
 import com.example.cms.backend.dto.ReqRes;
 import com.example.cms.backend.entity.Booking;
+import com.example.cms.backend.entity.Menu;
 import com.example.cms.backend.entity.User;
 import com.example.cms.backend.repository.BookingRepo;
+import com.example.cms.backend.repository.MenuRepo;
 import com.example.cms.backend.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -223,6 +227,22 @@ public class BookingService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private MenuRepo menuRepo;
+
+    //added upload menu
+    public void uploadMenu(MultipartFile file) throws IOException {
+        Menu menu = new Menu();
+        menu.setUploadDate(LocalDate.now());
+        menu.setPdfData(file.getBytes());
+        menuRepo.save(menu);
+    }
+
+    //added get menu
+    public Menu getLatestMenu() {
+        return menuRepo.findTopByOrderByUploadDateDesc();
+    }
 
     public ReqRes createBooking(Integer userId, ReqRes bookingRequest) {
         ReqRes response = new ReqRes();

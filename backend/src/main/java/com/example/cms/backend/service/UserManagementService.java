@@ -223,6 +223,55 @@ public class UserManagementService {
         return response;
     }
 
+    public ReqRes sendBookingOtp(Integer userId) {
+        ReqRes response = new ReqRes();
+        try {
+            User user = userRepo.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            String otp = otpService.generateOtp(user.getMobileNo().toString());
+
+            // Send OTP via SMS
+            String smsMessage = otp + " is OTP for Login to NBE Portal";
+            smsService.sendSms(user.getMobileNo().toString(), smsMessage, "1107162131505087206");
+//            logger.info("SMS OTP sent to: {}", mobileNumber);
+            // Send OTP via Email
+            emailService.sendOtpEmail(user.getEmail(), otp);
+
+            response.setStatusCode(200);
+            response.setMessage("OTP sent successfully to mobile and email");
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error sending OTP: " + e.getMessage());
+        }
+        return response;
+    }
+
+    //verifyBookingOtp for emergency booking
+    public ReqRes verifyBookingOtp(String mobileNumber, String otp) {
+        ReqRes response = new ReqRes();
+        try {
+            User user = userRepo.findByMobileNo(Long.parseLong(mobileNumber));
+            if (user == null) {
+                response.setStatusCode(404);
+                response.setMessage("User not found");
+                return response;
+            }
+
+            if (otpService.verifyOtp(mobileNumber, otp)) {
+                response.setStatusCode(200);
+                response.setMessage("OTP verified successfully");
+            } else {
+                response.setStatusCode(400);
+                response.setMessage("Invalid OTP");
+            }
+        } catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error verifying OTP: " + e.getMessage());
+        }
+        return response;
+    }
+
     private String generateOtp() {
         Random random = new Random();
         int otp = 100000 + random.nextInt(900000);
@@ -396,24 +445,24 @@ public class UserManagementService {
         return reqRes;
     }
 
-    public ReqRes updateAvatar(Integer userId, String avatar) {
+    public ReqRes updateAvatar(Integer userId, String avatarStyle) {
         ReqRes reqRes = new ReqRes();
         try {
             Optional<User> userOptional = userRepo.findById(userId);
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-                user.setAvatar(avatar);  // Set the new avatar data
+                user.setAvatarStyle(avatarStyle);  // Store the avatar style instead of image data
                 User updatedUser = userRepo.save(user);
                 reqRes.setUser(updatedUser);
                 reqRes.setStatusCode(200);
-                reqRes.setMessage("Avatar updated successfully");
+                reqRes.setMessage("Avatar style updated successfully");
             } else {
                 reqRes.setStatusCode(404);
                 reqRes.setMessage("User not found");
             }
         } catch (Exception e) {
             reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while updating avatar: " + e.getMessage());
+            reqRes.setMessage("Error occurred while updating avatar style: " + e.getMessage());
         }
         return reqRes;
     }

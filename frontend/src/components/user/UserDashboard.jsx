@@ -364,7 +364,11 @@
 import React, { useState, useEffect } from "react";
 import MealBookingService from "../service/MealBookingService";
 import UserService from "../service/UserService";
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
+import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  MenuIcon,
+} from "@heroicons/react/solid";
 
 export default function UserDashboard() {
   const [date, setDate] = useState("");
@@ -374,6 +378,7 @@ export default function UserDashboard() {
   const [bookingHistory, setBookingHistory] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
   const [bookingType, setBookingType] = useState("single");
+  const [menuUrl, setMenuUrl] = useState(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -389,6 +394,23 @@ export default function UserDashboard() {
       }
     };
 
+    const fetchMenuUrl = async () => {
+      try {
+        const response = await fetch("http://localhost:8085/api/menu/latest");
+        if (response.ok) {
+          const blob = await response.blob();
+          const menuUrl = URL.createObjectURL(blob);
+          setMenuUrl(menuUrl);
+          console.log("Menu PDF URL successfully created:", menuUrl);
+        } else {
+          console.error("Failed to fetch menu PDF. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching menu URL:", error);
+      }
+    };
+
+    fetchMenuUrl();
     fetchUserInfo();
   }, []);
 
@@ -546,12 +568,56 @@ export default function UserDashboard() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
+        {/* <div className=" flex gap-2"> */}
+        {/* <div className="w-4/6"> */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
-          <div className="bg-indigo-600 px-4 py-5 border-b border-gray-200 sm:px-6">
-            <h2 className="text-lg leading-6 font-medium text-white">
-              Book a Meal
-            </h2>
+          {/* <div className="bg-indigo-600 px-4 py-5 border-b border-gray-200 sm:px-6 flex gap-2">
+            <div className="w-1/2">
+              <h2 className="text-lg leading-6 font-medium text-white">
+                Book a Meal
+              </h2>
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+              {menuUrl ? (
+                <a
+                  href={menuUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <h2 className="text-lg leading-6 font-medium text-sm text-white flex items-center">
+                    <MenuIcon className="h-5 w-5 mr-2" />
+                    This Week's Menu
+                  </h2>
+                </a>
+              ) : (
+                <p className="text-gray-500">Menu not available</p>
+              )}
+            </div>
+          </div> */}
+          <div className="bg-indigo-600 px-4 py-5 border-b border-gray-200 sm:px-6 flex items-center justify-between gap-4">
+            <div className="w-1/2">
+              <h2 className="text-lg leading-6 font-medium text-white">
+                Book a Meal
+              </h2>
+            </div>
+            <div className="w-1/2 flex justify-end">
+              {menuUrl ? (
+                <a
+                  href={menuUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <MenuIcon className="h-5 w-5 mr-2" />
+                  <span>This Week's Menu</span>
+                </a>
+              ) : (
+                <p className="text-gray-300">Menu not available</p>
+              )}
+            </div>
           </div>
+
           <div className="px-4 py-5 sm:p-6">
             {message && (
               <div
@@ -638,6 +704,35 @@ export default function UserDashboard() {
             </form>
           </div>
         </div>
+        {/* </div> */}
+
+        {/* Modified Menu section */}
+        {/* <div className="w-2/6 bg-white shadow-md rounded-lg overflow-hidden mb-8">
+            <div className="bg-indigo-600 px-4 py-5 border-b border-gray-200 sm:px-6">
+              <h2 className="text-lg leading-6 font-medium text-white flex items-center">
+                <MenuIcon className="h-5 w-5 mr-2" />
+                This Week's Menu
+              </h2>
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+              {menuUrl ? (
+                <a
+                  href={menuUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <h2 className="text-lg leading-6 font-medium text-sm text-white flex items-center">
+                    <MenuIcon className="h-5 w-5 mr-2" />
+                    This Week's Menu
+                  </h2>
+                </a>
+              ) : (
+                <p className="text-gray-500">Menu not available</p>
+              )}
+            </div>
+          </div>
+        </div> */}
 
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <div className="bg-indigo-600 px-4 py-5 border-b border-gray-200 sm:px-6">

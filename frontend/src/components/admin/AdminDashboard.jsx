@@ -466,6 +466,9 @@ import {
   ClipboardListIcon,
   ExclamationIcon,
   DocumentReportIcon,
+  UploadIcon,
+  ExclamationCircleIcon,
+  ViewListIcon,
 } from "@heroicons/react/solid";
 
 export default function AdminDashboard() {
@@ -624,17 +627,25 @@ export default function AdminDashboard() {
             <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
               Quick Actions
             </h3>
-            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Link
                 to="/admin/bulk-booking"
                 className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
               >
+                <ViewListIcon
+                  className="-ml-1 mr-2 h-5 w-5"
+                  aria-hidden="true"
+                />
                 Bulk Booking
               </Link>
               <Link
                 to="/admin/tatkal-booking"
                 className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600"
               >
+                <ExclamationCircleIcon
+                  className="-ml-1 mr-2 h-5 w-5"
+                  aria-hidden="true"
+                />
                 Emergency Booking
               </Link>
               <Link
@@ -646,6 +657,13 @@ export default function AdminDashboard() {
                   aria-hidden="true"
                 />
                 Generate MIS Report
+              </Link>
+              <Link
+                to="/admin/upload-menu"
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600"
+              >
+                <UploadIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                Upload Menu
               </Link>
             </div>
           </div>

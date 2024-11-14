@@ -17,6 +17,7 @@ import UserDashboard from "./components/user/UserDashboard";
 import UserBookingHistory from "./components/user/UserBookingHistory";
 import Layout from "./components/Layout";
 import { ThemeProvider } from "./ThemeContext";
+import UploadMenu from "./components/admin/UploadMenu";
 
 function AppRoutes() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -47,7 +48,7 @@ function AppRoutes() {
           <Route path="/update-user/:userId" element={<UpdateUser />} />
           <Route path="/admin/bulk-booking" element={<BulkBooking />} />
           <Route path="/admin/tatkal-booking" element={<TatkalBooking />} />
-          <Route path="/admin/search" element={<Search />} />
+          <Route path="/admin/upload-menu" element={<UploadMenu />} />
           <Route path="/admin/mis" element={<MIS />} />
         </>
       )}
