@@ -6,6 +6,7 @@ import {
   ChevronDownIcon,
   MenuIcon,
 } from "@heroicons/react/solid";
+import { Loader2 } from "lucide-react";
 
 export default function UserDashboard() {
   const [date, setDate] = useState("");
@@ -16,6 +17,7 @@ export default function UserDashboard() {
   const [sortOrder, setSortOrder] = useState("desc");
   const [bookingType, setBookingType] = useState("single");
   const [menuUrl, setMenuUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -66,6 +68,62 @@ export default function UserDashboard() {
     }
   }, [bookingType]);
 
+  // const handleBookMeal = async (e) => {
+  //   e.preventDefault();
+  //   const now = new Date();
+  //   const bookDate = new Date(date);
+
+  //   if (bookDate < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+  //     alert("Cannot book for past days.");
+  //     return;
+  //   }
+
+  //   const isToday = bookDate.toDateString() === now.toDateString();
+  //   if (isToday && now.getHours() >= 11) {
+  //     alert("Booking is not allowed after 11:00 AM for today.");
+  //     return;
+  //   }
+  //   setIsLoading(true);
+
+  //   try {
+  //     if (bookingType === "single") {
+  //       await MealBookingService.bookMeal(currentUserId, {
+  //         date,
+  //         mealCount,
+  //       });
+  //     } else {
+  //       // Book for the entire week
+  //       const weekDates = [];
+  //       for (let i = 0; i < 5; i++) {
+  //         const currentDate = new Date(bookDate);
+  //         currentDate.setDate(bookDate.getDate() + i);
+  //         weekDates.push(currentDate.toISOString().split("T")[0]);
+  //       }
+  //       for (const weekDate of weekDates) {
+  //         await MealBookingService.bookMeal(currentUserId, {
+  //           date: weekDate,
+  //           mealCount,
+  //         });
+  //       }
+  //     }
+  //     setMessage("Booking successful!");
+  //     setDate("");
+  //     setMealCount(1);
+  //     alert(
+  //       bookingType === "single"
+  //         ? "Meal booked successfully!"
+  //         : "Meals booked for the entire week successfully!"
+  //     );
+  //     fetchBookingHistory(currentUserId);
+  //   } catch (error) {
+  //     console.error("Error booking meal:", error);
+  //     setMessage("Error creating booking. Please try again.");
+  //     alert("Failed to book meal. Please try again.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleBookMeal = async (e) => {
     e.preventDefault();
     const now = new Date();
@@ -81,13 +139,23 @@ export default function UserDashboard() {
       alert("Booking is not allowed after 11:00 AM for today.");
       return;
     }
+    setIsLoading(true);
 
     try {
       if (bookingType === "single") {
-        await MealBookingService.bookMeal(currentUserId, {
+        const response = await MealBookingService.bookMeal(currentUserId, {
           date,
           mealCount,
         });
+        if (response.statusCode === 200) {
+          setMessage("Booking successful!");
+          alert("Meal booked successfully!");
+        } else {
+          setMessage(
+            response.error || "Error creating booking. Please try again."
+          );
+          alert(response.error || "Failed to book meal. Please try again.");
+        }
       } else {
         // Book for the entire week
         const weekDates = [];
@@ -96,26 +164,34 @@ export default function UserDashboard() {
           currentDate.setDate(bookDate.getDate() + i);
           weekDates.push(currentDate.toISOString().split("T")[0]);
         }
+        let allSuccessful = true;
         for (const weekDate of weekDates) {
-          await MealBookingService.bookMeal(currentUserId, {
+          const response = await MealBookingService.bookMeal(currentUserId, {
             date: weekDate,
             mealCount,
           });
+          if (response.statusCode !== 200) {
+            allSuccessful = false;
+            setMessage(`Error booking for ${weekDate}: ${response.error}`);
+            break;
+          }
+        }
+        if (allSuccessful) {
+          setMessage("Bookings successful for the entire week!");
+          alert("Meals booked for the entire week successfully!");
+        } else {
+          alert("Some bookings failed. Please check the messages for details.");
         }
       }
-      setMessage("Booking successful!");
       setDate("");
       setMealCount(1);
-      alert(
-        bookingType === "single"
-          ? "Meal booked successfully!"
-          : "Meals booked for the entire week successfully!"
-      );
       fetchBookingHistory(currentUserId);
     } catch (error) {
       console.error("Error booking meal:", error);
       setMessage("Error creating booking. Please try again.");
       alert("Failed to book meal. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -160,16 +236,19 @@ export default function UserDashboard() {
   };
 
   const handleCancelMeal = async (bookingId, bookingDate) => {
-    try {
-      const confirmCancel = window.confirm("Are you sure you want to cancel?");
-      if (confirmCancel) {
+    const confirmCancel = window.confirm("Are you sure you want to cancel?");
+    if (confirmCancel) {
+      setIsLoading(true);
+      try {
         await MealBookingService.cancelBooking(currentUserId, bookingId);
         alert("Meal cancelled successfully!");
         fetchBookingHistory(currentUserId);
+      } catch (error) {
+        console.error("Error cancelling meal:", error);
+        alert("Failed to cancel meal. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error cancelling meal:", error);
-      alert("Failed to cancel meal. Please try again.");
     }
   };
 
@@ -231,8 +310,18 @@ export default function UserDashboard() {
 
           <div className="px-4 py-5 sm:p-6">
             {message && (
+              // <div
+              //   className="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+              //   role="alert"
+              // >
+              //   <span className="block sm:inline">{message}</span>
+              // </div>
               <div
-                className="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                className={`mb-4 ${
+                  message.includes("Error")
+                    ? "bg-red-100 text-red-700"
+                    : "bg-green-100 text-green-700"
+                } border px-4 py-3 rounded relative`}
                 role="alert"
               >
                 <span className="block sm:inline">{message}</span>
@@ -308,8 +397,12 @@ export default function UserDashboard() {
               </div>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
+                {isLoading ? (
+                  <Loader2 className="animate-spin h-5 w-5 mr-3" />
+                ) : null}
                 Book Meal{bookingType === "week" ? "s" : ""}
               </button>
             </form>
@@ -396,8 +489,13 @@ export default function UserDashboard() {
                           onClick={() =>
                             handleCancelMeal(booking.bookId, booking.date)
                           }
+                          disabled={isLoading}
                         >
-                          Cancel
+                          {isLoading ? (
+                            <Loader2 className="animate-spin h-5 w-5 mr-3" />
+                          ) : (
+                            "Cancel"
+                          )}
                         </button>
                       )}
                     </td>

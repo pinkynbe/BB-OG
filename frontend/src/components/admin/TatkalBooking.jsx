@@ -6,6 +6,7 @@ import {
   PlusCircleIcon,
   LockClosedIcon,
 } from "@heroicons/react/solid";
+import { Loader2 } from "lucide-react";
 
 export default function TatkalBooking() {
   const [users, setUsers] = useState([]);
@@ -14,6 +15,7 @@ export default function TatkalBooking() {
   const [message, setMessage] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -35,6 +37,7 @@ export default function TatkalBooking() {
       setMessage("Please select a user.");
       return;
     }
+    setIsLoading(true);
     try {
       const response = await UserService.sendBookingOtp(selectedUser);
       setOtpSent(true);
@@ -44,6 +47,8 @@ export default function TatkalBooking() {
     } catch (error) {
       console.error("Error sending OTP:", error);
       setMessage("Error sending OTP. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,6 +58,7 @@ export default function TatkalBooking() {
       setMessage("Please select a user and enter the OTP.");
       return;
     }
+    setIsLoading(true);
     try {
       const user = users.find((u) => u.id.toString() === selectedUser);
       if (!user) {
@@ -87,6 +93,8 @@ export default function TatkalBooking() {
     } catch (error) {
       console.error("Error booking emergency meal:", error);
       setMessage("Error booking emergency meal. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -174,8 +182,12 @@ export default function TatkalBooking() {
                 <button
                   type="button"
                   onClick={handleSendOtp}
+                  disabled={isLoading}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
+                  {isLoading ? (
+                    <Loader2 className="animate-spin h-5 w-5 mr-3" />
+                  ) : null}
                   Send OTP
                 </button>
               </div>
@@ -210,8 +222,12 @@ export default function TatkalBooking() {
               <div>
                 <button
                   type="submit"
+                  disabled={isLoading}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
+                  {isLoading ? (
+                    <Loader2 className="animate-spin h-5 w-5 mr-3" />
+                  ) : null}
                   Book Emergency Meal
                 </button>
               </div>

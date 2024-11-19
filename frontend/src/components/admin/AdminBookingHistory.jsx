@@ -100,13 +100,27 @@ export default function AdminBookingHistory() {
     });
   };
 
+  const handleCancelBooking = async (bookingId) => {
+    try {
+      const confirmCancel = window.confirm(
+        "Are you sure you want to cancel this booking?"
+      );
+      if (confirmCancel) {
+        await MealBookingService.cancelBooking(adminId, bookingId);
+        alert("Booking cancelled successfully!");
+        fetchBookings();
+      }
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
+      alert("Failed to cancel booking. Please try again.");
+    }
+  };
+
   const sortedBookings = sortBookings([...bookings]);
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">
-        User Booking History
-      </h2>
+      <h2 className="text-3xl font-bold text-gray-900 mb-6">Booking History</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
           <label
@@ -221,6 +235,12 @@ export default function AdminBookingHistory() {
                 >
                   Status
                 </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -248,6 +268,16 @@ export default function AdminBookingHistory() {
                     >
                       {booking.cancelled ? "Cancelled" : "Booked"}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    {!booking.cancelled && (
+                      <button
+                        onClick={() => handleCancelBooking(booking.bookId)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        Cancel
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

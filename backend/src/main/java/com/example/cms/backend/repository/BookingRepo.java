@@ -9,4 +9,5 @@ public interface BookingRepo extends JpaRepository<Booking, Long> {
     List<Booking> findByUser_IdAndDateOrderByDateDesc(Integer userId, LocalDate date);
     List<Booking> findByDateOrderByDateDesc(LocalDate date);
     List<Booking> findByUser_IdOrderByDateDesc(Integer userId);
+    List<Booking> findByUserIdAndDateAndIsCancelledFalse(Integer userId, LocalDate date);
 }

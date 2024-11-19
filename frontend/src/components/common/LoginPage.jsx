@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
 import { useAuth } from "../../AuthContext";
+import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [mobileNumber, setMobileNumber] = useState("");
@@ -11,12 +12,15 @@ export default function LoginPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState("");
   const [otpMethod, setOtpMethod] = useState("mobile");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { updateAuthStatus } = useAuth();
 
   const handleRequestOtp = async (e) => {
     e.preventDefault();
     setError("");
+    setError("");
+    setIsLoading(true);
     try {
       const value = otpMethod === "mobile" ? mobileNumber : email;
       const response = await UserService.requestOtp(value, otpMethod);
@@ -28,12 +32,15 @@ export default function LoginPage() {
     } catch (error) {
       console.error("Error in handleRequestOtp:", error);
       setError("Failed to send OTP. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
     try {
       const value = otpMethod === "mobile" ? mobileNumber : email;
       const response = await UserService.verifyOtp(value, otp, otpMethod);
@@ -48,6 +55,8 @@ export default function LoginPage() {
     } catch (error) {
       console.error("Error in handleVerifyOtp:", error);
       setError("Invalid OTP. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -185,8 +194,12 @@ export default function LoginPage() {
           <div>
             <button
               type="submit"
+              disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
+              {isLoading ? (
+                <Loader2 className="animate-spin h-5 w-5 mr-3" />
+              ) : null}
               {otpSent ? "Verify OTP" : "Request OTP"}
             </button>
           </div>
