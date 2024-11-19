@@ -20,8 +20,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+//    @Column(nullable = false)
+//    private String password;
 
     @Column(nullable = false)
     private String name;
@@ -33,7 +33,7 @@ public class User implements UserDetails {
     private String department;
 
     @Column(nullable = false)
-    private Long mobileNo;
+    private String mobileNo;
 
     @Column(nullable = false)
     private String pan;
@@ -50,6 +50,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
+    }
+
+    @Override
+    public String getPassword() {
+        return "";
     }
 
     @Override

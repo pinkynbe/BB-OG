@@ -18,7 +18,7 @@ public class UserService implements UserDetailsService {
         return userRepo.findByEmail(username).orElseThrow();
     }
 
-    public User findByMobileNo(Long mobileNo) {
+    public User findByMobileNo(String mobileNo) {
         return userRepo.findByMobileNo(mobileNo);
     }
 }

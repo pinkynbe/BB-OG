@@ -1,192 +1,3 @@
-// import React, { useState } from "react";
-// import UserService from "../service/UserService";
-// import { useNavigate } from "react-router-dom";
-
-// export default function RegistrationPage() {
-//   const navigate = useNavigate();
-
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     email: "",
-//     password: "",
-//     designation: "",
-//     department: "",
-//     mobileNo: "",
-//     pan: "",
-//     role: "USER",
-//   });
-
-//   // const handleInputChange = (e) => {
-//   //   const { name, value } = e.target;
-//   //   setFormData({ ...formData, [name]: value });
-//   // };
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-
-//     // Validation for exactly 10-digit number input
-//     if (
-//       name === "mobileNo" &&
-//       (!/^\d{0,10}$/.test(value) || value.length > 10)
-//     ) {
-//       return; // Skip updating the state if input is invalid
-//     }
-
-//     setFormData({ ...formData, [name]: value });
-//   };
-
-//   const handleBlur = (e) => {
-//     const { name, value } = e.target;
-
-//     if (name === "mobileNo" && value.length !== 10) {
-//       alert("Please enter exactly 10 digits for mobile number.");
-//     }
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     console.log("Submitted Role: ", formData.role);
-//     try {
-//       // Call the register method from UserService
-
-//       const token = localStorage.getItem("token");
-//       await UserService.register(formData, token);
-
-//       // Clear the form fields after successful registration
-//       setFormData({
-//         name: "",
-//         email: "",
-//         password: "",
-//         designation: "",
-//         department: "",
-//         mobileNo: "",
-//         pan: "",
-//         role: "",
-//       });
-//       alert("User registered successfully");
-//       navigate("/admin/user-management");
-//     } catch (error) {
-//       console.error("Error registering user:", error);
-//       alert("An error occurred while registering user");
-//     }
-//   };
-
-//   return (
-//     <div className="auth-container">
-//       <h2>Registration</h2>
-//       <form onSubmit={handleSubmit}>
-//         <div className="form-group">
-//           <label>Name:</label>
-//           <input
-//             type="text"
-//             name="name"
-//             value={formData.name}
-//             onChange={handleInputChange}
-//             required
-//           />
-//         </div>
-//         <div className="form-group">
-//           <label>Email:</label>
-//           <input
-//             type="email"
-//             name="email"
-//             value={formData.email}
-//             onChange={handleInputChange}
-//             required
-//           />
-//         </div>
-//         <div className="form-group">
-//           <label>Password:</label>
-//           <input
-//             type="password"
-//             name="password"
-//             value={formData.password}
-//             onChange={handleInputChange}
-//             required
-//           />
-//         </div>
-//         <div className="form-group">
-//           <label>Designation:</label>
-//           <input
-//             type="text"
-//             name="designation"
-//             value={formData.designation}
-//             onChange={handleInputChange}
-//             placeholder="Enter Designation"
-//             required
-//           />
-//         </div>
-//         {/* <div className="form-group">
-//           <label>Department:</label>
-//           <input
-//             type="text"
-//             name="department"
-//             value={formData.department}
-//             onChange={handleInputChange}
-//             placeholder="Enter Department"
-//             required
-//           />
-//         </div> */}
-//         <div className="form-group">
-//           <label>Department:</label>
-//           <select
-//             name="department"
-//             value={formData.department}
-//             onChange={handleInputChange}
-//             className="form-control"
-//           >
-//             <option value="">Select Department</option>
-//             <option value="IT Section">IT Section</option>
-//             <option value="Admin">Admin</option>
-//             <option value="Establishment">Establishment</option>
-//             <option value="Thesis">Thesis</option>
-//             <option value="DOEC">DOEC</option>
-//             <option value="Confidential">Confidential</option>
-//           </select>
-//         </div>
-//         <div className="form-group">
-//           <label>Mobile No:</label>
-//           <input
-//             type="text"
-//             name="mobileNo"
-//             value={formData.mobileNo}
-//             onChange={handleInputChange}
-//             onBlur={handleBlur}
-//             placeholder="Enter Mobile Number"
-//             required
-//           />
-//         </div>
-//         <div className="form-group">
-//           <label>Pan No:</label>
-//           <input
-//             type="text"
-//             name="pan"
-//             min="10"
-//             max="10"
-//             value={formData.city}
-//             onChange={handleInputChange}
-//             placeholder="Enter Pan Number"
-//             required
-//           />
-//         </div>
-//         <div className="form-group">
-//           <label>Role:</label>
-//           <select
-//             name="role"
-//             value={formData.role}
-//             onChange={handleInputChange}
-//             className="form-control"
-//           >
-//             <option value="USER">USER</option>
-//             <option value="ADMIN">ADMIN</option>
-//           </select>
-//         </div>
-//         <button type="submit">Register</button>
-//       </form>
-//     </div>
-//   );
-// }
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "../service/UserService";
@@ -206,7 +17,7 @@ export default function RegistrationPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
+    // password: "",
     designation: "",
     department: "",
     mobileNo: "",
@@ -243,7 +54,7 @@ export default function RegistrationPage() {
       setFormData({
         name: "",
         email: "",
-        password: "",
+        // password: "",
         designation: "",
         department: "",
         mobileNo: "",
@@ -321,7 +132,7 @@ export default function RegistrationPage() {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
@@ -345,7 +156,7 @@ export default function RegistrationPage() {
                   required
                 />
               </div>
-            </div>
+            </div> */}
 
             <div>
               <label

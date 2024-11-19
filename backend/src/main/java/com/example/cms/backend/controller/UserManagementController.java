@@ -23,7 +23,7 @@ public class UserManagementController {
     @PostMapping("/auth/send-otp")
     //Mobile and Email otp.
     public ResponseEntity<ReqRes> sendOtp(@RequestBody ReqRes request) {
-        String mobileNumber = request.getMobileNo() != null ? request.getMobileNo().toString() : null;
+        String mobileNumber = request.getMobileNo() != null ? request.getMobileNo() : null;
         String email = request.getEmail();
         return ResponseEntity.ok(userManagementService.sendOtp(mobileNumber, email));
     }
@@ -31,7 +31,7 @@ public class UserManagementController {
     @PostMapping("/auth/verify-otp")
     //Mobile and email otp logging.
     public ResponseEntity<ReqRes> verifyOtp(@RequestBody ReqRes request) {
-        String mobileNumber = request.getMobileNo() != null ? request.getMobileNo().toString() : null;
+        String mobileNumber = request.getMobileNo() != null ? request.getMobileNo() : null;
         String email = request.getEmail();
         return ResponseEntity.ok(userManagementService.verifyOtp(mobileNumber, email, request.getOtp()));
     }
@@ -43,7 +43,7 @@ public class UserManagementController {
 
     @PostMapping("/auth/verify-booking-otp")
     public ResponseEntity<ReqRes> verifyBookingOtp(@RequestBody ReqRes request) {
-        return ResponseEntity.ok(userManagementService.verifyBookingOtp(request.getMobileNo().toString(), request.getOtp()));
+        return ResponseEntity.ok(userManagementService.verifyBookingOtp(request.getMobileNo(), request.getOtp()));
     }
 
     @PostMapping("/auth/register")
@@ -51,10 +51,10 @@ public class UserManagementController {
         return ResponseEntity.ok(userManagementService.register(reg));
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<ReqRes> login(@RequestBody ReqRes req){
-        return ResponseEntity.ok(userManagementService.login(req));
-    }
+//    @PostMapping("/auth/login")
+//    public ResponseEntity<ReqRes> login(@RequestBody ReqRes req){
+//        return ResponseEntity.ok(userManagementService.login(req));
+//    }
 
     @PostMapping("/auth/refresh")
     public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes req){

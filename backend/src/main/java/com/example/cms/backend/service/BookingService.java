@@ -269,8 +269,20 @@ public class BookingService {
             response.setStatusCode(200);
 
             // Send confirmation email
-            String subject = "Booking Confirmation";
-            String body = "Dear " + user.getName() + ",\n\nYour Meal booking has been confirmed for " + bookingDate + ".\n\nNo of Meals:" + booking.getMealCount();
+            String subject = "Booking Confirmation \uD83C\uDF8A";
+//            String body = "Dear " + user.getName() + ",\n\nYour Meal booking has been confirmed for " + bookingDate + ".\n\nNo of Meals:" + booking.getMealCount();
+            String body = "\uD83C\uDF7D\uFE0F Booking Confirmed!! \uD83C\uDF7D\uFE0F\n" +
+                    "\n" +
+                    "Hello " + user.getName() + ",\n" +
+                    "\n" +
+                    "Your meal booking has been successfully confirmed! \uD83E\uDD73. Here are the details:\n" +
+                    "\n" +
+                    "\uD83D\uDCC5 Date: " + bookingDate + "\n" +
+                    "\uD83C\uDF74 Number of Meals: " + booking.getMealCount() + "\n" +
+                    "\n" +
+                    "We’re excited to serve you a delicious meal. Enjoy your break and have a great day at work!\n" +
+                    "\n" +
+                    "Bon appétit!" ;
             emailService.sendBookingConfirmationEmail(user.getEmail(), subject, body);
         } catch (Exception e) {
             response.setStatusCode(400);
@@ -315,50 +327,6 @@ public class BookingService {
         }
         return response;
     }
-
-//    public ReqRes getUserBookings(Integer userId, LocalDate date) {
-//        ReqRes response = new ReqRes();
-//        try {
-//            User user = userRepo.findById(userId)
-//                    .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//            List<Booking> bookings;
-//            if (date != null) {
-//                bookings = bookingRepo.findByUserIdAndDate(userId, date);
-//            } else {
-//                bookings = bookingRepo.findByUserId(userId);
-//            }
-//            response.setBookingList(bookings);
-//            response.setMessage("Bookings retrieved successfully");
-//            response.setStatusCode(200);
-//        } catch (Exception e) {
-//            response.setStatusCode(400);
-//            response.setError(e.getMessage());
-//        }
-//        return response;
-//    }
-
-//    public ReqRes getUserBookings(Integer userId, LocalDate date) {
-//        ReqRes response = new ReqRes();
-//        try {
-//            User user = userRepo.findById(userId)
-//                    .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//            List<Booking> bookings;
-//            if (date != null) {
-//                bookings = bookingRepo.findByUserIdAndDate(userId, date);
-//            } else {
-//                bookings = bookingRepo.findByUserId(userId);
-//            }
-//            response.setBookingList(bookings);
-//            response.setMessage("Bookings retrieved successfully");
-//            response.setStatusCode(200);
-//        } catch (Exception e) {
-//            response.setStatusCode(400);
-//            response.setError(e.getMessage());
-//        }
-//        return response;
-//    }
 
     public ReqRes getUserBookings(Integer userId, LocalDate date) {
         ReqRes response = new ReqRes();

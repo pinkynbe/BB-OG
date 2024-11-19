@@ -28,8 +28,9 @@ public class EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(toEmail);
-            message.setSubject("Your OTP for Login");
-            message.setText("Your OTP is: " + otp + ". It will expire in 5 minutes.");
+            message.setSubject("Your OTP for Login \uD83D\uDD11");
+//            message.setText("Your OTP for BiteBooking is: " + otp + ". It will expire in 5 minutes. \n Happy Booking ;)");
+            message.setText("\uD83C\uDF54 Your meal is on its way! \uD83D\uDE80 \n But first, let's sprinkle some magic. Use this secret code to confirm your delicious journey: \n\n \uD83C\uDF7D\uFE0F   OTP: " + otp + "   \uD83C\uDF7D\uFE0F \n\n Bon appétit! \uD83C\uDF89");
             mailSender.send(message);
             System.out.println("OTP email sent successfully!");
         } catch (Exception e) {

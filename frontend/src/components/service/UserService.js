@@ -3,19 +3,19 @@ import axios from "axios";
 class UserService {
   static BASE_URL = "http://localhost:8085";
 
-  static async login(email, password) {
-    try {
-      const response = await axios.post(`${UserService.BASE_URL}/auth/login`, {
-        email,
-        password,
-      });
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("role", response.data.role);
-      return response.data;
-    } catch (err) {
-      throw err;
-    }
-  }
+  // static async login(email, password) {
+  //   try {
+  //     const response = await axios.post(`${UserService.BASE_URL}/auth/login`, {
+  //       email,
+  //       password,
+  //     });
+  //     localStorage.setItem("token", response.data.token);
+  //     localStorage.setItem("role", response.data.role);
+  //     return response.data;
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // }
 
   //requestOtp with mobile or email option
   static async requestOtp(value, method) {

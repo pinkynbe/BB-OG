@@ -6,8 +6,8 @@ import com.example.cms.backend.repository.UserRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +28,8 @@ public class UserManagementService {
     private JWTUtils jwtUtils;
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
     @Autowired
     private EmailService emailService;
     @Autowired
@@ -37,59 +37,6 @@ public class UserManagementService {
     @Autowired
     private OtpService otpService;
 
-//    //methods without logging details
-//    public ReqRes sendOtp(String mobileNumber) {
-//        ReqRes response = new ReqRes();
-//        try {
-//            User user = userRepo.findByMobileNo(Long.parseLong(mobileNumber));
-//            if (user == null) {
-//                response.setStatusCode(404);
-//                response.setMessage("User not found");
-//                return response;
-//            }
-//
-//            String otp = otpService.generateOtp(mobileNumber);
-//            String message = otp + " is OTP for Login to NBE Portal";
-//            String smsResponse = smsService.sendSms(mobileNumber, message, "1107162131505087206");
-//
-//            response.setStatusCode(200);
-//            response.setMessage("OTP sent successfully");
-//        } catch (Exception e) {
-//            response.setStatusCode(500);
-//            response.setMessage("Error sending OTP: " + e.getMessage());
-//        }
-//        return response;
-//    }
-
-//    //Added logging option for otp in console without emailing otp.
-//    public ReqRes sendOtp(String mobileNumber) {
-//        ReqRes response = new ReqRes();
-//        try {
-//            logger.info("Sending OTP to mobile number: {}", mobileNumber);
-//            User user = userRepo.findByMobileNo(Long.parseLong(mobileNumber));
-//            if (user == null) {
-//                logger.warn("User not found for mobile number: {}", mobileNumber);
-//                response.setStatusCode(404);
-//                response.setMessage("User not found");
-//                return response;
-//            }
-//
-//            String otp = otpService.generateOtp(mobileNumber);
-//            String message = otp + " is OTP for Login to NBE Portal";
-//            logger.debug("Generated OTP: {} for mobile number: {}", otp, mobileNumber);
-//
-//            String smsResponse = smsService.sendSms(mobileNumber, message, "1107162131505087206");
-//            logger.info("SMS sent. Response: {}", smsResponse);
-//
-//            response.setStatusCode(200);
-//            response.setMessage("OTP sent successfully");
-//        } catch (Exception e) {
-//            logger.error("Error sending OTP: ", e);
-//            response.setStatusCode(500);
-//            response.setMessage("Error sending OTP: " + e.getMessage());
-//        }
-//        return response;
-//    }
 
     //Sending otp to mobile and email
     public ReqRes sendOtp(String mobileNumber, String email) {
@@ -98,7 +45,7 @@ public class UserManagementService {
             logger.info("Attempting to send OTP. Mobile: {}, Email: {}", mobileNumber, email);
             User user = null;
             if (mobileNumber != null) {
-                Optional<User> userOpt = Optional.ofNullable(userRepo.findByMobileNo(Long.parseLong(mobileNumber)));
+                Optional<User> userOpt = Optional.ofNullable(userRepo.findByMobileNo(mobileNumber));
                 if (userOpt.isPresent()) {
                     user = userOpt.get();
                 } else {
@@ -144,34 +91,6 @@ public class UserManagementService {
         return response;
     }
 
-//    //Mobile otp with logging
-//    public ReqRes verifyOtp(String mobileNumber, String otp) {
-//        ReqRes response = new ReqRes();
-//        try {
-//            User user = userRepo.findByMobileNo(Long.parseLong(mobileNumber));
-//            if (user == null) {
-//                response.setStatusCode(404);
-//                response.setMessage("User not found");
-//                return response;
-//            }
-//
-//            if (otpService.verifyOtp(mobileNumber, otp)) {
-//                String token = jwtUtils.generateToken(user);
-//                response.setStatusCode(200);
-//                response.setToken(token);
-//                response.setRole(user.getRole());
-//                response.setMessage("OTP verified successfully");
-//            } else {
-//                response.setStatusCode(400);
-//                response.setMessage("Invalid OTP");
-//            }
-//        } catch (Exception e) {
-//            response.setStatusCode(500);
-//            response.setMessage("Error verifying OTP: " + e.getMessage());
-//        }
-//        return response;
-//    }
-
     //Mobile and email otp login.
     public ReqRes verifyOtp(String mobileNumber, String email, String otp) {
         ReqRes response = new ReqRes();
@@ -181,7 +100,7 @@ public class UserManagementService {
             String identifier = mobileNumber != null ? mobileNumber : email;
 
             if (mobileNumber != null) {
-                Optional<User> userOpt = Optional.ofNullable(userRepo.findByMobileNo(Long.parseLong(mobileNumber)));
+                Optional<User> userOpt = Optional.ofNullable(userRepo.findByMobileNo(mobileNumber));
                 if (userOpt.isPresent()) {
                     user = userOpt.get();
                 } else {
@@ -229,11 +148,11 @@ public class UserManagementService {
             User user = userRepo.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            String otp = otpService.generateOtp(user.getMobileNo().toString());
+            String otp = otpService.generateOtp(user.getMobileNo());
 
             // Send OTP via SMS
             String smsMessage = otp + " is OTP for Login to NBE Portal";
-            smsService.sendSms(user.getMobileNo().toString(), smsMessage, "1107162131505087206");
+            smsService.sendSms(user.getMobileNo(), smsMessage, "1107162131505087206");
 //            logger.info("SMS OTP sent to: {}", mobileNumber);
             // Send OTP via Email
             emailService.sendOtpEmail(user.getEmail(), otp);
@@ -251,7 +170,7 @@ public class UserManagementService {
     public ReqRes verifyBookingOtp(String mobileNumber, String otp) {
         ReqRes response = new ReqRes();
         try {
-            User user = userRepo.findByMobileNo(Long.parseLong(mobileNumber));
+            User user = userRepo.findByMobileNo(mobileNumber);
             if (user == null) {
                 response.setStatusCode(404);
                 response.setMessage("User not found");
@@ -284,7 +203,7 @@ public class UserManagementService {
         try {
             User user = new User();
             user.setEmail(registrationRequest.getEmail());
-            user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+//            user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
             user.setName(registrationRequest.getName());
             user.setDesignation(registrationRequest.getDesignation());
             user.setDepartment(registrationRequest.getDepartment());
@@ -307,28 +226,28 @@ public class UserManagementService {
     }
 
 
-    public ReqRes login(ReqRes loginRequest){
-        ReqRes response = new ReqRes();
-        try {
-            authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-                            loginRequest.getPassword()));
-            var user = userRepo.findByEmail(loginRequest.getEmail()).orElseThrow();
-            var jwt = jwtUtils.generateToken(user);
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
-            response.setStatusCode(200);
-            response.setToken(jwt);
-            response.setRole(user.getRole());
-            response.setRefreshToken(refreshToken);
-            response.setExpirationTime("24Hrs");
-            response.setMessage("Successfully Logged In");
-
-        }catch (Exception e){
-            response.setStatusCode(500);
-            response.setMessage(e.getMessage());
-        }
-        return response;
-    }
+//    public ReqRes login(ReqRes loginRequest){
+//        ReqRes response = new ReqRes();
+//        try {
+//            authenticationManager
+//                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
+//                            loginRequest.getPassword()));
+//            var user = userRepo.findByEmail(loginRequest.getEmail()).orElseThrow();
+//            var jwt = jwtUtils.generateToken(user);
+//            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+//            response.setStatusCode(200);
+//            response.setToken(jwt);
+//            response.setRole(user.getRole());
+//            response.setRefreshToken(refreshToken);
+//            response.setExpirationTime("24Hrs");
+//            response.setMessage("Successfully Logged In");
+//
+//        }catch (Exception e){
+//            response.setStatusCode(500);
+//            response.setMessage(e.getMessage());
+//        }
+//        return response;
+//    }
 
     public ReqRes refreshToken(ReqRes refreshTokenReqiest){
         ReqRes response = new ReqRes();
@@ -424,11 +343,11 @@ public class UserManagementService {
                 existingUser.setPan(updatedUser.getPan());
                 existingUser.setRole(updatedUser.getRole());
 
-                // Check if password is present in the request
-                if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-                    // Encode the password and update it
-                    existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-                }
+//                // Check if password is present in the request
+//                if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+//                    // Encode the password and update it
+//                    existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+//                }
 
                 User savedUser = userRepo.save(existingUser);
                 reqRes.setUser(savedUser);

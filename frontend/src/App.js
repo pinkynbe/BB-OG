@@ -12,7 +12,6 @@ import AdminBookingHistory from "./components/admin/AdminBookingHistory";
 import BulkBooking from "./components/admin/BulkBooking";
 import TatkalBooking from "./components/admin/TatkalBooking";
 import MIS from "./components/admin/MIS";
-import Search from "./components/admin/Search";
 import UserDashboard from "./components/user/UserDashboard";
 import UserBookingHistory from "./components/user/UserBookingHistory";
 import Layout from "./components/Layout";
