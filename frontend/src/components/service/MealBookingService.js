@@ -1,7 +1,8 @@
 import axios from "axios";
 
 class MealBookingService {
-  static BASE_URL = "http://localhost:8085/api/bookings";
+  static BASE_URL = "http://localhost:8080/api/bookings";
+  // static BASE_URL = "http://backend:8080/api/bookings";
 
   static async bookMeal(userId, bookingData) {
     try {

@@ -7,6 +7,7 @@ import {
   HashtagIcon,
   DocumentTextIcon,
 } from "@heroicons/react/solid";
+import { Loader2 } from "lucide-react";
 
 export default function BulkBooking() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function BulkBooking() {
   });
   const [message, setMessage] = useState("");
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -52,6 +54,7 @@ export default function BulkBooking() {
       setMessage("Cannot book for past days.");
       return;
     }
+    setIsLoading(true);
 
     try {
       await MealBookingService.bookMeal(currentUserId, formData);
@@ -66,6 +69,8 @@ export default function BulkBooking() {
     } catch (error) {
       console.error("Error booking meal:", error);
       setMessage("Error creating booking. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -218,6 +223,7 @@ export default function BulkBooking() {
                   value={formData.remark}
                   onChange={handleInputChange}
                   placeholder="Enter any additional remarks"
+                  required
                 ></textarea>
               </div>
             </div>
@@ -225,8 +231,12 @@ export default function BulkBooking() {
             <div>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
+                {isLoading ? (
+                  <Loader2 className="animate-spin h-5 w-5 mr-3" />
+                ) : null}
                 Book
               </button>
             </div>

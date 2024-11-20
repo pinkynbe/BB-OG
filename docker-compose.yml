@@ -1,45 +1,38 @@
-version: '4.35'
-
 services:
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile.backend
+      context: backend
+      dockerfile: Dockerfile
     ports:
-      - "8085:8085"
-    restart: always
+      - "8080:8080"
+    # restart: always
     environment:
-      PORT: 8085
-      MYSQL_HOST: database
-      MYSQL_PORT: 3306
-      MYSQL_DB: bite_booking
+      MYSQL_HOST: mysql-container
+      MYSQL_URL: jdbc:mysql://mysql-container/bite_booking
       MYSQL_USER: root
-      MYSQL_PASSWORD: 
-      DDL_AUTO: update
+      MYSQL_PASSWORD: root
     depends_on:
-      - database
+      - mysql-container
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    restart: always
+    # restart: always
+    depends_on:
+      - backend
 
-  database:
-    image: mysql:8.0
-    container_name: mysql-container
-    ports:
-      - "3308:3306"
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: 
-      MYSQL_DATABASE: bite_booking
-      MYSQL_USER: root
-      MYSQL_PASSWORD: 
+  mysql-container:
+    image: mysql:8.0.28
+    # container_name: mysql-container
+    # restart: always
     volumes:
-      - db_data:/var/lib/mysql
+      - dbdata:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: bite_booking
+      MYSQL_ROOT_PASSWORD: root
 
 volumes:
-  db_data:
+  dbdata:

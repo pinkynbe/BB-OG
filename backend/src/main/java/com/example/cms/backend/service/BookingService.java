@@ -54,10 +54,17 @@ public class BookingService {
                 throw new IllegalArgumentException("Cannot book for past dates");
             }
 
+//            // Check if user already has an active booking for the requested date
+//            List<Booking> existingBookings = bookingRepo.findByUserIdAndDateAndIsCancelledFalse(userId, bookingDate);
+//            if (!existingBookings.isEmpty()) {
+//                throw new IllegalStateException("You already have an active booking for this date");
+//            }
             // Check if user already has an active booking for the requested date
-            List<Booking> existingBookings = bookingRepo.findByUserIdAndDateAndIsCancelledFalse(userId, bookingDate);
-            if (!existingBookings.isEmpty()) {
-                throw new IllegalStateException("You already have an active booking for this date");
+            if (!user.getRole().equals("ADMIN")) {
+                List<Booking> existingBookings = bookingRepo.findByUserIdAndDateAndIsCancelledFalse(userId, bookingDate);
+                if (!existingBookings.isEmpty()) {
+                    throw new IllegalStateException("You already have an active booking for this date");
+                }
             }
 
             Booking booking = new Booking();

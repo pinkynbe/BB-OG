@@ -30,7 +30,8 @@ export default function UploadMenu() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8085/api/menu/upload", {
+      const response = await fetch("http://localhost:8080/api/menu/upload", {
+        // const response = await fetch("http://backend:8080/api/menu/upload", {
         // Updated base URL here
         method: "POST",
         body: formData,
