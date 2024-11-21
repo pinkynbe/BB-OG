@@ -1,5 +1,10 @@
 HELP.md
+# Ignore all target folders
 target/
+
+# Unignore target folder in the backend directory
+!backend/target/
+
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
