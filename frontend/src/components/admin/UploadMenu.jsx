@@ -30,15 +30,18 @@ export default function UploadMenu() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8080/api/menu/upload", {
-        // const response = await fetch("http://backend:8080/api/menu/upload", {
-        // Updated base URL here
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const response = await fetch("http://localhost:8080/api/menu/upload", {
+      const response = await fetch(
+        process.env.REACT_APP_API_BASE_URL + "/api/menu/upload",
+        {
+          // Updated base URL here
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const result = await response.text();

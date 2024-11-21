@@ -52,7 +52,7 @@ services:
 
       # Database connection details
       MYSQL_HOST: host.docker.internal
-      MYSQL_PORT: 3308
+      MYSQL_PORT: 3306
       MYSQL_USER: root
       MYSQL_PASSWORD: root
 
