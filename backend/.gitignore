@@ -1,6 +1,6 @@
 HELP.md
-# Ignore all target folders
-target/
+# # Ignore all target folders
+# target/
 
 # Unignore target folder in the backend directory
 !backend/target/
