@@ -1,3 +1,44 @@
+# services:
+#   backend:
+#     build:
+#       context: backend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8080:8080"
+#     # restart: always
+#     environment:
+#       MYSQL_HOST: mysql-container
+#       MYSQL_URL: jdbc:mysql://mysql-container/bite_booking
+#       MYSQL_USER: root
+#       MYSQL_PASSWORD: root
+#     depends_on:
+#       - mysql-container
+
+#   frontend:
+#     build:
+#       context: frontend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3000:3000"
+#     # restart: always
+#     depends_on:
+#       - backend
+
+#   mysql-container:
+#     image: mysql:8.0.28
+#     # container_name: mysql-container
+#     # restart: always
+#     volumes:
+#       - dbdata:/var/lib/mysql
+#     environment:
+#       MYSQL_DATABASE: bite_booking
+#       MYSQL_ROOT_PASSWORD: root
+
+# volumes:
+#   dbdata:
+
+###################################################################
+
 services:
   backend:
     build:
@@ -5,14 +46,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    # restart: always
     environment:
-      MYSQL_HOST: mysql-container
-      MYSQL_URL: jdbc:mysql://mysql-container/bite_booking
+      # Spring profile for Docker
+      SPRING_PROFILES_ACTIVE: docker
+
+      # Database connection details
+      MYSQL_HOST: host.docker.internal
+      MYSQL_PORT: 3308
       MYSQL_USER: root
       MYSQL_PASSWORD: root
-    depends_on:
-      - mysql-container
 
   frontend:
     build:
@@ -20,19 +62,5 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    # restart: always
     depends_on:
       - backend
-
-  mysql-container:
-    image: mysql:8.0.28
-    # container_name: mysql-container
-    # restart: always
-    volumes:
-      - dbdata:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: bite_booking
-      MYSQL_ROOT_PASSWORD: root
-
-volumes:
-  dbdata:
