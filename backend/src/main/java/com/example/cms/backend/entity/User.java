@@ -35,7 +35,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String mobileNo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String pan;
 
     @Column(nullable = false)

@@ -80,12 +80,16 @@ export default function UpdateUser() {
       );
       if (confirmUpdate) {
         const token = localStorage.getItem("token");
-        await UserService.updateUser(userId, userData, token);
+        const response = await UserService.updateUser(userId, userData, token);
+        if (response.message.includes("PAN already exists")) {
+          alert("PAN already exists for another user.");
+          return;
+        }
         navigate("/admin/user-management");
       }
     } catch (error) {
       console.error("Error updating user profile:", error);
-      alert(error);
+      alert(error.message || "An error occurred.");
     }
   };
 
@@ -189,14 +193,50 @@ export default function UpdateUser() {
                     aria-hidden="true"
                   />
                 </div>
-                <input
+                {/* <input
                   type="text"
                   name="department"
                   id="department"
                   className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                   value={userData.department}
                   onChange={handleInputChange}
-                />
+                /> */}
+                <select
+                  name="role"
+                  id="role"
+                  className="mt-1 block w-full pl-10 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                  value={userData.department}
+                  onChange={handleInputChange}
+                >
+                  <option value="Accounts">Accounts</option>
+                  <option value="Accredetation">Accredetation</option>
+                  <option value="Administration">Administration</option>
+                  <option value="Counseling and Registration">
+                    Counseling and Registration
+                  </option>
+                  <option value="CPD">CPD</option>
+                  <option value="Diary">Diary</option>
+                  <option value="Dispatch">Dispatch</option>
+                  <option value="DoEC">DoEC</option>
+                  <option value="ED Office">ED Office</option>
+                  <option value="E-learning">E-learning</option>
+                  <option value="Establishment">Establishment</option>
+                  <option value="Estate">Estate</option>
+                  <option value="Exam Conduct">Exam Conduct</option>
+                  <option value="Exam Confidential">Exam Confidential</option>
+                  <option value="Finance">Finance</option>
+                  <option value="General Administration">
+                    General Administration
+                  </option>
+                  <option value="Rajbhasha">Rajbhasha</option>
+                  <option value="IT">IT</option>
+                  <option value="Legal Cell">Legal Cell</option>
+                  <option value="OSD Office">OSD Office</option>
+                  <option value="Thesis">Thesis</option>
+                  <option value="Training & Monitoring">
+                    Training & Monitoring
+                  </option>
+                </select>
               </div>
             </div>
 

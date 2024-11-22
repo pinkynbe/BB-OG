@@ -50,7 +50,11 @@ export default function RegistrationPage() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await UserService.register(formData, token);
+      const response = await UserService.register(formData, token);
+      if (response.message && response.message.includes("PAN already exists")) {
+        alert("A user with this PAN already exists.");
+        return;
+      }
       setFormData({
         name: "",
         email: "",
@@ -65,7 +69,15 @@ export default function RegistrationPage() {
       navigate("/admin/user-management");
     } catch (error) {
       console.error("Error registering user:", error);
-      alert("An error occurred while registering user");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message === "A user with this PAN already exists."
+      ) {
+        alert("A user with this PAN already exists.");
+      } else {
+        alert("An error occurred while registering user");
+      }
     }
   };
 
@@ -207,12 +219,34 @@ export default function RegistrationPage() {
                   required
                 >
                   <option value="">Select Department</option>
-                  <option value="IT Section">IT Section</option>
-                  <option value="Admin">Admin</option>
+                  <option value="Accounts">Accounts</option>
+                  <option value="Accredetation">Accredetation</option>
+                  <option value="Administration">Administration</option>
+                  <option value="Counseling and Registration">
+                    Counseling and Registration
+                  </option>
+                  <option value="CPD">CPD</option>
+                  <option value="Diary">Diary</option>
+                  <option value="Dispatch">Dispatch</option>
+                  <option value="DoEC">DoEC</option>
+                  <option value="ED Office">ED Office</option>
+                  <option value="E-learning">E-learning</option>
                   <option value="Establishment">Establishment</option>
+                  <option value="Estate">Estate</option>
+                  <option value="Exam Conduct">Exam Conduct</option>
+                  <option value="Exam Confidential">Exam Confidential</option>
+                  <option value="Finance">Finance</option>
+                  <option value="General Administration">
+                    General Administration
+                  </option>
+                  <option value="Rajbhasha">Rajbhasha</option>
+                  <option value="IT">IT</option>
+                  <option value="Legal Cell">Legal Cell</option>
+                  <option value="OSD Office">OSD Office</option>
                   <option value="Thesis">Thesis</option>
-                  <option value="DOEC">DOEC</option>
-                  <option value="Confidential">Confidential</option>
+                  <option value="Training & Monitoring">
+                    Training & Monitoring
+                  </option>
                 </select>
               </div>
             </div>

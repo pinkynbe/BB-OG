@@ -201,6 +201,14 @@ public class UserManagementService {
         ReqRes resp = new ReqRes();
 
         try {
+            // Check if a user with the same PAN already exists
+            Optional<User> existingUserWithPan = userRepo.findByPan(registrationRequest.getPan());
+            if (existingUserWithPan.isPresent()) {
+                resp.setStatusCode(400);
+                resp.setMessage("A user with this PAN already exists.");
+                return resp;
+            }
+            
             User user = new User();
             user.setEmail(registrationRequest.getEmail());
 //            user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
@@ -335,6 +343,15 @@ public class UserManagementService {
             Optional<User> userOptional = userRepo.findById(userId);
             if (userOptional.isPresent()) {
                 User existingUser = userOptional.get();
+
+                // Check if the new PAN is already taken by another user
+                Optional<User> userWithSamePan = userRepo.findByPan(updatedUser.getPan());
+                if (userWithSamePan.isPresent() && !userWithSamePan.get().getId().equals(userId)) {
+                    reqRes.setStatusCode(400);
+                    reqRes.setMessage("PAN already exists for another user.");
+                    return reqRes;
+                }
+
                 existingUser.setEmail(updatedUser.getEmail());
                 existingUser.setName(updatedUser.getName());
                 existingUser.setDesignation(updatedUser.getDesignation());

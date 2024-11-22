@@ -21,7 +21,7 @@ public class DefaultUserData {
             defaultUser.setEmail("pinkynbe@gmail.com");
             defaultUser.setName("Pinky Nishad");
             defaultUser.setDesignation("Jr. Programmer");
-            defaultUser.setDepartment("IT_Section");
+            defaultUser.setDepartment("IT");
             defaultUser.setMobileNo("8528975985");
             defaultUser.setPan("BQP56WYN");
             defaultUser.setRole("ADMIN");
