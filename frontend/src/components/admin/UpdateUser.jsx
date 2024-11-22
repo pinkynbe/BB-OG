@@ -202,8 +202,8 @@ export default function UpdateUser() {
                   onChange={handleInputChange}
                 /> */}
                 <select
-                  name="role"
-                  id="role"
+                  name="department"
+                  id="department"
                   className="mt-1 block w-full pl-10 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                   value={userData.department}
                   onChange={handleInputChange}
