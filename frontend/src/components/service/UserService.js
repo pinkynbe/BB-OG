@@ -2,6 +2,7 @@ import axios from "axios";
 
 class UserService {
   // static BASE_URL = "http://localhost:8080";
+  // static BASE_URL = "http://172.16.38.207:8080";
   static BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   // static async login(email, password) {

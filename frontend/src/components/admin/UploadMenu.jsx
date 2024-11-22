@@ -31,6 +31,7 @@ export default function UploadMenu() {
     try {
       const token = localStorage.getItem("token");
       // const response = await fetch("http://localhost:8080/api/menu/upload", {
+      // const response = await fetch("http://172.16.38.207:8080/api/menu/upload",{
       const response = await fetch(
         process.env.REACT_APP_API_BASE_URL + "/api/menu/upload",
         {

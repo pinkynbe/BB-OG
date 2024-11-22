@@ -2,7 +2,8 @@ import axios from "axios";
 
 class MealBookingService {
   // static BASE_URL = "http://localhost:8080/api/bookings";
-  static BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  // static BASE_URL = "http://172.16.38.207:8080/api/bookings";
+  static BASE_URL = process.env.REACT_APP_API_BASE_URL + "/api/bookings";
 
   static async bookMeal(userId, bookingData) {
     try {

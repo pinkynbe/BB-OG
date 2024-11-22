@@ -36,9 +36,11 @@ export default function UserDashboard() {
     const fetchMenuUrl = async () => {
       try {
         // const response = await fetch("http://localhost:8080/api/menu/latest");
+        // const response = await fetch("http://172.16.38.207:8080/api/menu/latest");
         const response = await fetch(
           process.env.REACT_APP_API_BASE_URL + "/api/menu/latest"
         );
+
         if (response.ok) {
           const blob = await response.blob();
           const menuUrl = URL.createObjectURL(blob);
