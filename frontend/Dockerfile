@@ -2,7 +2,7 @@
 FROM node:20.17.0-alpine
 
 # Set the working directory
-WORKDIR /bitebooking
+WORKDIR /NbeSwad
 
 # Copy package.json and install dependencies
 COPY package.json package-lock.json ./

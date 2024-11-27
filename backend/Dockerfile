@@ -2,7 +2,7 @@
 FROM openjdk:21-slim
 
 # Working directory
-WORKDIR /bitebooking
+WORKDIR /NbeSwad
 
 # JAR file
 COPY target/backend-0.0.1-SNAPSHOT.jar /bitebooking/backend.jar
