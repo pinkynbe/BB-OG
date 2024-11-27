@@ -10,7 +10,7 @@ import UserManagementPage from "./components/admin/UserManagementPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import AdminBookingHistory from "./components/admin/AdminBookingHistory";
 import BulkBooking from "./components/admin/BulkBooking";
-import TatkalBooking from "./components/admin/TatkalBooking";
+import EmergencyBooking from "./components/admin/EmergencyBooking";
 import MIS from "./components/admin/MIS";
 import UserDashboard from "./components/user/UserDashboard";
 import UserBookingHistory from "./components/user/UserBookingHistory";
@@ -46,7 +46,10 @@ function AppRoutes() {
           />
           <Route path="/update-user/:userId" element={<UpdateUser />} />
           <Route path="/admin/bulk-booking" element={<BulkBooking />} />
-          <Route path="/admin/tatkal-booking" element={<TatkalBooking />} />
+          <Route
+            path="/admin/emergency-booking"
+            element={<EmergencyBooking />}
+          />
           <Route path="/admin/upload-menu" element={<UploadMenu />} />
           <Route path="/admin/mis" element={<MIS />} />
         </>

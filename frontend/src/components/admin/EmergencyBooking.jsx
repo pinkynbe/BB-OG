@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/solid";
 import { Loader2 } from "lucide-react";
 
-export default function TatkalBooking() {
+export default function EmergencyBooking() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [mealCount, setMealCount] = useState(1);
