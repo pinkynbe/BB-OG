@@ -5,10 +5,7 @@ FROM openjdk:21-slim
 WORKDIR /NbeSwad
 
 # JAR file
-COPY target/backend-0.0.1-SNAPSHOT.jar /bitebooking/backend.jar
-
-# Expose port
-#EXPOSE 8085
+COPY target/backend-0.0.1-SNAPSHOT.jar /Nbe/backend.jar
 
 # Run the JAR file when the container starts
 ENTRYPOINT ["java", "-jar", "backend.jar"]
