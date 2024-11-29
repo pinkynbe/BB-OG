@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long menuId;
 
     @Column(name = "upload_date")
     private LocalDate uploadDate;

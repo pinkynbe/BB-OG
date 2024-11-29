@@ -42,8 +42,13 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
     try {
+      const trimmedOtp = otp.trim();
       const value = otpMethod === "mobile" ? mobileNumber : email;
-      const response = await UserService.verifyOtp(value, otp, otpMethod);
+      const response = await UserService.verifyOtp(
+        value,
+        trimmedOtp,
+        otpMethod
+      );
       if (response.statusCode === 200 && response.token) {
         updateAuthStatus();
         navigate("/dashboard");

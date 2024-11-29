@@ -14,9 +14,10 @@ import EmergencyBooking from "./components/admin/EmergencyBooking";
 import MIS from "./components/admin/MIS";
 import UserDashboard from "./components/user/UserDashboard";
 import UserBookingHistory from "./components/user/UserBookingHistory";
+import UploadMenu from "./components/admin/UploadMenu";
 import Layout from "./components/Layout";
 import { ThemeProvider } from "./ThemeContext";
-import UploadMenu from "./components/admin/UploadMenu";
+import { LanguageProvider } from "./components/contexts/LanguageContext";
 
 function AppRoutes() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -93,13 +94,15 @@ function App() {
       <ThemeProvider>
         <BrowserRouter>
           <div className="App">
-            {/* <Navbar /> */}
-            <Layout>
-              <div className="content">
-                <AppRoutes />
-              </div>
-            </Layout>
-            {/* <FooterComponent /> */}
+            <LanguageProvider>
+              {/* <Navbar /> */}
+              <Layout>
+                <div className="content">
+                  <AppRoutes />
+                </div>
+              </Layout>
+              {/* <FooterComponent /> */}
+            </LanguageProvider>
           </div>
         </BrowserRouter>
       </ThemeProvider>

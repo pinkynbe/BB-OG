@@ -11,7 +11,7 @@ public class OtpService {
     private static final long OTP_VALID_DURATION = 5 * 60 * 1000; // 5 minutes
 
     public String generateOtp(String mobileNumber) {
-        String otp = String.format("%06d", new Random().nextInt(999999));
+        String otp = String.format("%04d", new Random().nextInt(9999));
         otpStorage.put(mobileNumber, otp + ":" + System.currentTimeMillis());
         return otp;
     }
